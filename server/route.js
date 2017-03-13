@@ -20,16 +20,16 @@ router.put('/users/:id', UserController.updateUser);
 
 router.delete('/users/:id', UserController.deleteUser);
 
-// router.post('/documents/', DocumentController.createDoc);
+router.post('/documents/', DocumentController.createDocument);
 
-// router.get('/documents/', DocumentController.findDoc);
+router.get('/documents/', DocumentController.getDocument);
 
-// router.get('/documents/:id', DocumentController.matchingDoc);
+router.get('/documents/:id', DocumentController.findDocument);
 
-// router.put('/documents/:id', DocumentController.updateDoc);
+router.put('/documents/:id', DocumentController.updateDocument);
 
-// router.delete('/documents/:id', DocumentController.deleteDoc);
+router.delete('/documents/:id', DocumentController.deleteDocument);
 
-// router.get('/users/:id/documents/', UserController.userDoc);
+router.get('/users/:id/documents/', UserController.getUserDocument);
 
 module.exports = router;
