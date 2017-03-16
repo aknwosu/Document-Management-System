@@ -5,13 +5,17 @@ import UserController from '../controllers/users';
 const router = express.Router();
 
 router.route('/')
-.get(UserController.getUser)
+.get(Authentication.requireValidToken,
+Authentication.validUser, UserController.getUser)
 .post(UserController.createUser);
 
 router.route('/:id')
-.get(UserController.findUser)
-.put(Authentication.requireValidToken, UserController.updateUser)
-.delete(Authentication.requireValidToken, UserController.deleteUser);
+.get(Authentication.requireValidToken,
+Authentication.validUser, UserController.findUser)
+.put(Authentication.requireValidToken,
+Authentication.validUser, UserController.updateUser)
+.delete(Authentication.requireValidToken,
+Authentication.isAdmin, UserController.deleteUser);
 
 router.route('/login')
 .post(UserController.login);
@@ -20,6 +24,7 @@ router.route('/logout')
 .post(Authentication.requireValidToken, UserController.logout);
 
 router.route('/:id/documents')
-.get(Authentication.requireValidToken, UserController.getUserDocument);
+.get(Authentication.requireValidToken,
+Authentication.validUser, UserController.getUserDocuments);
 
 export default router;

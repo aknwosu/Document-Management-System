@@ -23,7 +23,7 @@ module.exports = {
           key: 'id'
         }
       },
-      accessType: {
+      access: {
         type: Sequelize.STRING,
         allowNull: false
       },

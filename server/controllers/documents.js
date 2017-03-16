@@ -1,17 +1,4 @@
 import db from '../models';
-// const Documents =
-// const Users = db.Users;
-// const Documents = db.Documents;
-
-// const documentDetails = (document) => {
-//   const fields = {
-//     title: document.title,
-//     content: document.content,
-//     accessType: document.accessType,
-//     userId: document.userId
-//   };
-//   return fields;
-// };
 
 /**
  *
@@ -53,12 +40,22 @@ class DocumentController {
    * @param {object} res
    * @returns{object} response object
    */
-  static getDocument(req, res) {
-    db.Documents.findAll().then((documents) => {
-      res.status(200).json({
-        msg: 'Document found',
-        documents
+  static getDocuments(req, res) {
+    if (req.userType === 'admin') {
+      db.Documents.findAll().then((documents) => {
+        res.status(200).json({
+          msg: 'Document found',
+          documents
+        });
       });
+    }
+    db.Documents.findAll().then((documents) => {
+      if (documents.access === 'public') {
+        res.status(200).json({
+          msg: 'Document found',
+          documents
+        });
+      }
     }).catch((err) => {
       res.status(500).json({
         msg: err.message
@@ -79,10 +76,12 @@ class DocumentController {
       }
     })
       .then((document) => {
-        res.status(200).send({
-          msg: 'Document found',
-          document
-        });
+        if (req.validUser) {
+          res.status(200).send({
+            msg: 'Document found',
+            document
+          });
+        }
       }).catch((err) => {
         res.status(500).send({
           error: err.message
@@ -103,6 +102,9 @@ class DocumentController {
       }
     })
       .then((document) => {
+        if (req.userType !== 'admin' || req.decoded.id !== document.userId) {
+          return res.status(401).send({ message: 'Unauthorized' });
+        }
         document.title = req.body.title;
         document.content = req.body.content;
         document.save().then(() => {

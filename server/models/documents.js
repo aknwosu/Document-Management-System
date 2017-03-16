@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    accessType: {
+    access: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'public',

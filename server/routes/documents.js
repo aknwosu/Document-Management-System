@@ -5,12 +5,16 @@ import DocumentController from '../controllers/documents';
 const router = express.Router();
 
 router.route('/')
-.get(Authentication.requireValidToken, DocumentController.getDocument)
+.get(Authentication.requireValidToken,
+Authentication.validUser, DocumentController.getDocuments)
 .post(Authentication.requireValidToken, DocumentController.createDocument);
 
 router.route('/:id')
-.get(Authentication.requireValidToken, DocumentController.findDocument)
-.put(Authentication.requireValidToken, DocumentController.updateDocument)
-.delete(Authentication.requireValidToken, DocumentController.deleteDocument);
+.get(Authentication.requireValidToken,
+Authentication.validUser, DocumentController.findDocument)
+.put(Authentication.requireValidToken,
+Authentication.validUser, DocumentController.updateDocument)
+.delete(Authentication.requireValidToken,
+Authentication.isAdmin, DocumentController.deleteDocument);
 
 export default router;
