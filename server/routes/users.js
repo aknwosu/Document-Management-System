@@ -5,9 +5,9 @@ import UserController from '../controllers/users';
 const router = express.Router();
 
 router.route('/')
+.post(UserController.createUser)
 .get(Authentication.requireValidToken,
-Authentication.validUser, UserController.getUser)
-.post(UserController.createUser);
+Authentication.validUser, UserController.getUser);
 
 router.route('/:id')
 .get(Authentication.requireValidToken,

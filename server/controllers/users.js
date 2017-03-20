@@ -74,6 +74,17 @@ class UserController {
  * @returns{object} response object
  */
   static createUser(req, res) {
+    db.Users.findOne({ where: { email: req.body.email } || { username: req.body.username }})
+    .then((userExists) => {
+      if (userExists) {
+        return res.status(409)
+        .send({ message: 'User already exists' });
+      }
+    });
+    // if (req.body.roleId !== 2) {
+    //   return res.status(401)
+    //   .send({message: 'you cannot add your own roleId'});
+    // }
     const newUser = {
       username: req.body.username,
       firstname: req.body.firstname,
@@ -89,12 +100,12 @@ class UserController {
           roleId: user.roleId
         }, secret, { expiresIn: '5 days' });
 
-        res.status(201).json({
+        res.status(201).send({
           msg: `${user.username} Created`,
           user: userDetails(user),
           token });
       }).catch((err) => {
-        res.status(500).json({ msg: err.message });
+        res.status(400).json({ msg: err.message });
       });
   }
 
@@ -142,9 +153,12 @@ class UserController {
         return res.status(404)
         .send({ message: 'This user does not exist' });
       }
-      user.firstname = req.body.firstname;
-      user.lastname = req.body.lastname;
-      user.password = req.body.password;
+      const allowedFields = ['firstname', 'lastname', 'password'];
+
+      allowedFields.forEach((field) => {
+        user[field] = req.body[field] ? req.body[field] : user[field];
+      });
+
       user.save().then(() => {
         res.status(200).json({ msg: userDetails(user) });
       }).catch((err) => {
@@ -163,15 +177,15 @@ class UserController {
     db.Users.findOne({ where: { id: req.params.id } })
       .then((user) => {
         if (!user) {
-          res.status(200).json({ msg: `User ${req.params.id} not found` });
+          res.status(404).json({ msg: `User ${req.params.id} not found` });
         }
-        if (user.id !== req.decoded.UserId) {
+        if (user.id != req.decoded.id) {
           return res.status(403)
             .send({ message: 'Oops! you cant delete someone else' });
         }
         db.Users.destroy({ where: { id: req.params.id } })
           .then(() => {
-            res.status(201).json({ msg: 'User deleted' });
+            res.status(204).json({ msg: 'User deleted' });
           });
       });
   }

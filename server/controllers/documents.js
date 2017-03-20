@@ -18,12 +18,12 @@ class DocumentController {
     const newDoc = {
       title: req.body.title,
       content: req.body.content,
-      accessType: req.body.accessType,
+      access: req.body.access,
       userId: req.body.userId
     };
     db.Documents.create(newDoc)
       .then((document) => {
-        res.status(200).json({
+        res.status(201).json({
           msg: 'Document created',
           document
         });
@@ -41,21 +41,18 @@ class DocumentController {
    * @returns{object} response object
    */
   static getDocuments(req, res) {
-    if (req.userType === 'admin') {
-      db.Documents.findAll().then((documents) => {
-        res.status(200).json({
-          msg: 'Document found',
-          documents
-        });
-      });
-    }
     db.Documents.findAll().then((documents) => {
-      if (documents.access === 'public') {
-        res.status(200).json({
-          msg: 'Document found',
-          documents
-        });
-      }
+      res.status(200).json({
+        msg: 'Documents found',
+        documents
+      });
+    });
+
+    db.Documents.findAll().then((documents) => {
+      res.status(200).json({
+        msg: 'Document found',
+        documents
+      });
     }).catch((err) => {
       res.status(500).json({
         msg: err.message
@@ -102,9 +99,6 @@ class DocumentController {
       }
     })
       .then((document) => {
-        if (req.userType !== 'admin' || req.decoded.id !== document.userId) {
-          return res.status(401).send({ message: 'Unauthorized' });
-        }
         document.title = req.body.title;
         document.content = req.body.content;
         document.save().then(() => {

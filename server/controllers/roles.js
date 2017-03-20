@@ -6,18 +6,20 @@ import db from '../models';
 class RoleController {
   /**
    * Post Role
-   * @param {*} req
-   * @param {*} res
+   * @param {*} request
+   * @param {*} response
    * @returns{void}
    */
-  static createRole(req, res) {
-    db.Roles.create(req.body)
-    .then((role) => {
-      res.status(201).send({ message: 'role created successfully', role });
-    })
-    .catch((err) => {
-      res.status.send(err);
-    });
+  static createRole(request, response) {
+    db.Roles.create(request.body)
+      .then((createdRole) => {
+        response.status(201)
+          .json(createdRole);
+      })
+      .catch((error) => {
+        response.status(400)
+          .send({ message: error });
+      });
   }
 
   /**
@@ -34,7 +36,7 @@ class RoleController {
       }
       role.update(req.body)
       .then((updatedRole) => {
-        res.status(200).send({ message: 'Role updated successfully', updatedRole })
+        res.status(200).json(updatedRole);
       });
     })
     .catch((err) => {
@@ -44,8 +46,8 @@ class RoleController {
 
   /**
    * Fetch roles
-   * @param {*} req 
-   * @param {*} res 
+   * @param {*} req
+   * @param {*} res
    */
   static fetchRoles(req, res) {
     db.Roles.findAll()
@@ -63,9 +65,9 @@ class RoleController {
     db.Roles.findOne({ where: { id: req.params.id } })
     .then((role) => {
       if (role) {
-        db.Roles.destroy()
+        role.destroy()
         .then(() => {
-          res.status(200).send({ message: 'role deleted successfully' })
+          res.status(200).json({ message: 'role deleted successfully' });
         });
       }
     }).catch((error) => {

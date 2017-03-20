@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'public',
       validate: {
-        isIn: ['private', 'public', 'role']
+        isIn: [['private', 'public', 'role']]
       }
     }
   }, {
