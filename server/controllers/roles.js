@@ -11,15 +11,21 @@ class RoleController {
    * @returns{void}
    */
   static createRole(request, response) {
-    db.Roles.create(request.body)
-      .then((createdRole) => {
-        response.status(201)
-          .json(createdRole);
-      })
-      .catch((error) => {
-        response.status(400)
-          .send({ message: error });
-      });
+    db.Roles.findOne({ where: { title: request.body.title } })
+    .then((role) => {
+      if (role) {
+        return response.status(400).send({ message: 'Role already exists' });
+      }
+      db.Roles.create(request.body)
+        .then((createdRole) => {
+          response.status(201)
+            .json(createdRole);
+        })
+        .catch((error) => {
+          response.status(400)
+            .send({ message: error });
+        });
+    });
   }
 
   /**
@@ -29,6 +35,11 @@ class RoleController {
    * @returns{Response} response object
    */
   static updateRole(req, res) {
+    db.Roles.findOne({ where: { title: req.body.title } })
+    .then((roleExists) => {
+      if (roleExists) {
+        return res.status(400).send({ message: 'Role already exists' });
+      }
     db.Roles.findOne({ where: { id: req.params.id } })
     .then((role) => {
       if (!role) {
@@ -42,8 +53,20 @@ class RoleController {
     .catch((err) => {
       res.status(400).send({ message: err });
     });
+     });
   }
 
+  static getRole(req, res) {
+    db.Roles.findOne({ where: { id: req.params.id } })
+    .then((role) => {
+      if (!role) {
+        return res.status(404).send({ message: 'Not found' });
+      }
+      if (role) {
+        return res.status(200).send({ role });
+      }
+    });
+  }
   /**
    * Fetch roles
    * @param {*} req
@@ -64,6 +87,9 @@ class RoleController {
   static deleteRole(req, res) {
     db.Roles.findOne({ where: { id: req.params.id } })
     .then((role) => {
+      if (role.title === 'admin'){
+        return res.status(403).send({ message: 'You cannot delete the admin role'});
+      }
       if (role) {
         role.destroy()
         .then(() => {

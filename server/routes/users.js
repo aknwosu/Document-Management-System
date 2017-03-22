@@ -7,7 +7,8 @@ const router = express.Router();
 router.route('/')
 .post(UserController.createUser)
 .get(Authentication.requireValidToken,
-Authentication.validUser, UserController.getUser);
+Authentication.validUser, UserController.getUser)
+.post(Authentication.requireValidToken, Authentication.isAdmin, UserController.createAdminUser);
 
 router.route('/:id')
 .get(Authentication.requireValidToken,

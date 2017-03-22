@@ -22,6 +22,7 @@ const regularUser2 = testFile.regularUser1edit;
 const adminUser = testFile.adminUser1;
 const regularUser5 = testFile.regularUser5;
 const roleIdUser = testFile.roleIdUser;
+// const regularUser1
 
 describe('Users', () => {
   before((done) => {
@@ -130,14 +131,14 @@ describe('Users', () => {
       });
    });
 
-  it('Role Id for regular users should be 2',
-      (done) => {
-        request.get('/users/2').set('authorization', adminToken)
-          .end((error, response) => {
-            expect(response.body.msg.roleId).to.equal(2);
-            done();
-          });
-      });
+  // it('Role Id for regular users should be 2',
+  //     (done) => {
+  //       request.get('/users/2').set('authorizatio  n', adminToken)
+  //         .end((error, response) => {
+  //           expect(response.body.msg.roleId).to.equal(2);
+  //           done();
+  //         });
+  //     });
 
   it('should allow admin update a user', (done) => {
     request.put('/users/3')

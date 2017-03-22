@@ -81,17 +81,47 @@ class UserController {
         .send({ message: 'User already exists' });
       }
     });
-    // if (req.body.roleId !== 2) {
-    //   return res.status(401)
-    //   .send({message: 'you cannot add your own roleId'});
-    // }
     const newUser = {
       username: req.body.username,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       password: req.body.password,
       email: req.body.email,
-      roleId: 1
+    };
+    db.Users.create(newUser)
+      .then((user) => {
+        const token = jwt.sign({
+          id: user.id,
+          roleId: user.roleId
+        }, secret, { expiresIn: '5 days' });
+
+        res.status(201).send({
+          msg: `${user.username} Created`,
+          user: userDetails(user),
+          token });
+      }).catch((err) => {
+        res.status(400).json({ msg: err.message });
+      });
+  }
+
+/**
+ * 
+ */
+  static createAdminUser(req, res) {
+   db.Users.findOne({ where: { email: req.body.email } || { username: req.body.username }})
+    .then((userExists) => {
+      if (userExists) {
+        return res.status(409)
+        .send({ message: 'User already exists' });
+      }
+    });
+    const newUser = {
+      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      password: req.body.password,
+      email: req.body.email,
+      roleId: req.body.roleId
     };
     db.Users.create(newUser)
       .then((user) => {

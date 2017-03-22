@@ -12,6 +12,8 @@ Authentication.isAdmin, RolesController.fetchRoles);
 
 
 router.route('/:id')
+.get(Authentication.requireValidToken,
+Authentication.isAdmin, RolesController.getRole)
 .put(Authentication.requireValidToken,
 Authentication.isAdmin, RolesController.updateRole)
 .delete(Authentication.requireValidToken,

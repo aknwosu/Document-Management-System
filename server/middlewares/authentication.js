@@ -32,7 +32,7 @@ const Authentication = {
       } else {
         return res.status(403).send({
           success: false,
-          message: 'You need to be an admin to view use this resource.' });
+          message: 'You need to be an admin to use this resource.' });
       }
     });
   },
