@@ -42,9 +42,6 @@ class RoleController {
       }
     db.Roles.findOne({ where: { id: req.params.id } })
     .then((role) => {
-      if (!role) {
-        return res.status(404).send({ message: 'Not found' });
-      }
       role.update(req.body)
       .then((updatedRole) => {
         res.status(200).json(updatedRole);

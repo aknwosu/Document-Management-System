@@ -5,12 +5,11 @@ import UserController from '../controllers/users';
 
 const router = express.Router();
 
-// router.route('/');
 
 router.route('/users')
 .get(Authentication.requireValidToken, UserController.searchUser);
 
-router.route('/documents/')
+router.route('/documents')
 .get(Authentication.requireValidToken, DocumentController.searchDocument);
 
 export default router;

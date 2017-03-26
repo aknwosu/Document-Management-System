@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-
 import db from '../models';
 
 const secret = process.env.SECRET_TOKEN || 'myverygoodbadtkey';
@@ -45,8 +44,20 @@ const Authentication = {
           next();
         } else {
           req.userType = 'user';
+          next();
         }
       });
+    });
+  },
+
+  isOwnerOrAdmin(req, res, next) {
+    db.Users.findById(req.decoded.id).then((user) => {
+      if ((user.roleId === 1)
+      || (parseInt(user.id, 10) === parseInt(req.params.id, 10))) {
+        next();
+      } else {
+        return res.status(403).send({ message: 'You are not allowed in here' });
+      }
     });
   }
 };

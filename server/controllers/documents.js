@@ -1,4 +1,5 @@
 import db from '../models';
+import Paginator from '../helpers/pagination';
 
 /**
  *
@@ -41,25 +42,39 @@ class DocumentController {
    * @returns{object} response object
    */
   static getDocuments(req, res) {
-    db.Documents.findAll().then((documents) => {
-      res.status(200).json({
-        msg: 'Documents found',
-        documents
-      });
-    });
-
-    db.Documents.findAll().then((documents) => {
+    const query = {};
+    query.limit = (req.query.limit > 0) ? req.query.limit : 10;
+    query.offset = (req.query.offset > 0) ? req.query.offset : 0;
+    if (req.userType === 'admin') {
+      query.where = {};
+    } else if (req.userType === 'user') {
+      query.include = [{ model: db.Users }];
+      query.where =
+        db.sequelize.or(
+          { userId: req.decoded.id },
+          { access: 'public' },
+          db.sequelize.and(
+            { access: 'role' },
+            db.sequelize.where(db.sequelize.col('User.roleId'), '=', req.decoded.roleId)
+          )
+        );
+    }
+    db.Documents.findAndCountAll(query)
+    .then((documents) => {
+      const metaData = {
+        count: documents.count,
+        limit: query.limit,
+        offset: query.offset
+      };
+      delete documents.count;
+      const pageData = Paginator.paginate(metaData);
       res.status(200).json({
         msg: 'Document found',
-        documents
-      });
-    }).catch((err) => {
-      res.status(500).json({
-        msg: err.message
+        documents,
+        pageData
       });
     });
   }
-
   /**
    *
    * @param {object} req
@@ -73,15 +88,23 @@ class DocumentController {
       }
     })
       .then((document) => {
-        if (req.validUser) {
-          res.status(200).send({
-            msg: 'Document found',
-            document
-          });
+
+        if (document) {
+          if (req.decoded.id === document.userId
+          || req.userType === 'admin' || document.access === 'public') {
+            res.status(200).send({
+              message: 'Document found',
+              document
+            });
+          } else {
+            res.status(403).send({ message: 'private document' });
+          }
+        } else {
+          return res.status(404).send({ message: 'Not found' });
         }
       }).catch((err) => {
-        res.status(500).send({
-          error: err.message
+        res.status(500).json({
+          msg: err.message
         });
       });
   }
@@ -99,6 +122,9 @@ class DocumentController {
       }
     })
       .then((document) => {
+        if (!document) {
+          return res.status(404).send({ message: 'Not found' });
+        }
         document.title = req.body.title;
         document.content = req.body.content;
         document.save().then(() => {
@@ -127,7 +153,7 @@ class DocumentController {
     })
       .then((document) => {
         if (!document) {
-          res.status(200).send({
+          return res.status(404).send({
             msg: `Document ${req.params.id} not found`
           });
         }
@@ -154,9 +180,12 @@ class DocumentController {
     if (req.query.q) {
       db.Documents.findOne({
         where: {
-          title: {
-            $iLike: `%${req.query.q}%`
-          }
+          access: 'public',
+          $or: [{
+            title: {
+              $iLike: `%${req.query.q}%`
+            }
+          }]
         }
       }).then((document) => {
         res.status(200).json({

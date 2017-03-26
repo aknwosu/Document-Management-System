@@ -1,12 +1,9 @@
-import jwt from 'jsonwebtoken';
 import chai from 'chai';
 import Request from 'supertest';
 import dotenv from 'dotenv';
 import db from '../models';
 import app from '../../server';
 import testFile from './testFile';
-
-dotenv.config();
 
 const expect = chai.expect;
 const request = Request.agent(app);
@@ -15,32 +12,23 @@ let rolesAdminUserToken, rolesRegularUserToken, rolesRegularUser, rolesRegularUs
 
 describe('Roles', () => {
   before((done) => {
-    db.Users.sync({ force: true })
+    db.sequelize.sync({ force: true })
     .then(() => {
-      db.Roles.destroy({
-        // don't delete the seeded roles
-        where: {
-          id: {
-            $gt: 2
-          }
-        },
-      }).then(() => {
-        done();
-      });
+      done();
     });
   });
 
   before((done) => {
-    db.Users.bulkCreate([testFile.rolesAdminUser, testFile.rolesRegularUser], { individualHooks: true })
+    db.Roles.bulkCreate([testFile.adminRole, testFile.userRole])
+    .then(() => db.Users.bulkCreate([testFile.adminUser, testFile.regularUser], { individualHooks: true }))
     .then(() => {
       request.post('/users/login')
-      .send(testFile.rolesAdminUser)
+      .send(testFile.adminUser)
       .end((error, response) => {
         rolesAdminUserToken = response.body.token;
         request.post('/users/login')
-        .send(testFile.rolesRegularUser)
+        .send(testFile.regularUser)
         .end((err, res) => {
-          rolesRegularUser = res.body.user;
           rolesRegularUserToken = res.body.token;
           done();
         });
@@ -90,7 +78,7 @@ describe('Roles', () => {
     });
 
     it('should not return all roles to a non admin', (done) => {
-      request.post('/users').send(testFile.rolesRegularUser2)
+      request.post('/users').send(testFile.regularUser2)
       .then((newRoleUser) => {
         rolesRegularUserToken2 = newRoleUser.body.token;
         request.get('/roles')
@@ -167,6 +155,25 @@ describe('Roles', () => {
     });
     it('should fail to update if the role does not exist', (done) => {
       request.put('/roles/xyz')
+      .set('authorization', rolesAdminUserToken)
+      .send({ title: 'user' })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+
+    it('should catch errors', (done) => {
+      request.put('/roles/all')
+      .set('authorization', rolesAdminUserToken)
+      .send({ title: null })
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+    });
+    it('should catch errors', (done) => {
+      request.put('/roles')
       .set('authorization', rolesAdminUserToken)
       .send({ title: 'user' })
       .end((error, response) => {

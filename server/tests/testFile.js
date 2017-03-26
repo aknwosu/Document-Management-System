@@ -14,21 +14,36 @@ const data = {
     title: ""
   },
 
-  rolesRegularUser: {
+  regularUser: {
     username: faker.internet.userName(),
     firstname: faker.name.firstName(),
     lastname: faker.name.lastName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
   },
-  rolesRegularUser2: {
+  regularUser1: {
+    username: 'damin',
+    firstname: 'Daniel',
+    lastname: 'Amin',
+    email: 'daniel@amin.com',
+    password: 'feefeesho',
+  },
+  regularUser2: {
     username: faker.internet.userName(),
     firstname: faker.name.firstName(),
     lastname: faker.name.lastName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
   },
-  rolesAdminUser: {
+  regularUser3: {
+    id: 7,
+    username: faker.internet.userName(),
+    firstname: faker.name.firstName(),
+    lastname: faker.name.lastName(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+  },
+  adminUser: {
     username: faker.internet.userName(),
     firstname: faker.name.firstName(),
     lastname: faker.name.lastName(),
@@ -52,13 +67,48 @@ const data = {
     password: faker.internet.password(),
     roleId: 1
   },
-
-  regularUser1: {
-    username: 'damin',
-    firstname: 'Daniel',
-    lastname: 'Amin',
-    email: 'daniel@amin.com',
-    password: 'feefeesho',
+  dontBeAdmin: {
+    username: faker.internet.userName(),
+    firstname: faker.name.firstName(),
+    lastname: faker.name.lastName(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+    roleId: 1
+  },
+  publicDocument1: {
+    title: faker.company.catchPhrase(),
+    content: faker.lorem.paragraph(),
+    access: 'public',
+    userId: 2,
+  },
+  publicDocument2: {
+    title: faker.company.catchPhrase(),
+    content: faker.lorem.paragraph(),
+    access: 'public',
+    userId: 1,
+  },
+  publicDocument3: {
+    title: 'GOT',
+    content: 'All men must die',
+    userId: 2,
+  },
+  privateDocument1: {
+    title: faker.company.catchPhrase(),
+    content: faker.lorem.paragraph(),
+    access: 'private',
+    userId: 1,
+  },
+  privateDocument2: {
+    title: 'Game of Thrones',
+    content: faker.lorem.paragraph(),
+    access: 'private',
+    userId: 2,
+  },
+  privateDocument3: {
+    title: faker.company.catchPhrase(),
+    content: faker.lorem.paragraph(),
+    access: 'private',
+    userId: 1,
   },
   regularUserEdit: {
     username: 'Nodamin2',
@@ -67,13 +117,7 @@ const data = {
     email: 'nodaniel2@amin.com',
     password: 'feefeesho'
   },
-  regularUser2: {
-    username: 'damin2',
-    firstname: 'Daniel2',
-    lastname: 'Amin2',
-    email: 'daniel2@amin.com',
-    password: 'feefeesho2',
-  },
+ 
   regularUser1edit: {
     username: 'damin2',
     firstname: 'Daniel2',
@@ -132,42 +176,6 @@ const data = {
     content: faker.lorem.paragraph(),
     access: 'public',
     userId: 3,
-  },
-  publicDocument2: {
-    title: faker.company.catchPhrase(),
-    content: faker.lorem.paragraph(),
-    access: 'public',
-    userId: 2,
-  },
-  publicDocument3: {
-    title: faker.company.catchPhrase(),
-    content: faker.lorem.paragraph(),
-    access: 'public',
-    userId: 3,
-  },
-  publicDocument1: {
-    title: 'GOT',
-    content: 'All men must die',
-    access: 'public',
-    userId: 2,
-  },
-  privateDocument1: {
-    title: faker.company.catchPhrase(),
-    content: faker.lorem.paragraph(),
-    access: 'private',
-    userId: 1,
-  },
-  privateDocument2: {
-    title: 'Game of Thrones',
-    content: faker.lorem.paragraph(),
-    access: 'private',
-    userId: 4,
-  },
-  privateDocument3: {
-    title: faker.company.catchPhrase(),
-    content: faker.lorem.paragraph(),
-    access: 'private',
-    userId: 4,
   },
   privateDocument4: {
     title: faker.company.catchPhrase(),
