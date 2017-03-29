@@ -239,11 +239,20 @@ describe('Users', () => {
       });
     });
     it('should find users based on search terms', (done) => {
-      request.get(`/users/?query=${testFile.regularUser.username}`)
+      request.get('/search/users/?q=Cole')
       .set('authorization', adminToken)
       .end((error, response) => {
-        console.log(response.body.users);
         expect(response.status).to.equal(200);
+        expect(response.body.message.username).to.equal('Cole');
+        done();
+      });
+    });
+
+    it('should check that a query string was input', (done) => {
+      request.get('/search/users/?q=')
+      .set('authorization', adminToken)
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
         done();
       });
     });
@@ -352,57 +361,4 @@ describe('Users', () => {
       });
     });
   });
-
-  // describe('search for users', () => {
-    
-  // });
-
-    // it('Should not allow a regular user to update another user', (done) => {
-      
-    // });
-
-
-   
-  // it('should return status code 400 for incorrect input', (done) => {
-  //   request.post('/users')
-  //       .send({})
-  //       .end((error, response) => {
-  //         expect(response.status).to.equal(400);
-  //         done();
-  //       });
-  // });
-
-  // it('should successfully search for one user', (done) => {
-  //   
-  // });
-
-  // it('should successfully get all users',
-  //  (done) => {
-  //    request.get('/users').send(adminUser)
-  //     .set('authorization', adminToken)
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(200);
-  //       done();
-  //     });
-  //  });
-
-  // it('should require a token to get all users',
-  //  (done) => {
-  //    request.get('/users').send(adminUser)
-  //     .end((err, res) => {
-  //       expect(res.status).to.equal(401);
-  //       done();
-  //     });
-  //  });
-
-  // // it('Role Id for regular users should be 2',
-  // //     (done) => {
-  // //       request.get('/users/2').set('authorizatio  n', adminToken)
-  // //         .end((error, response) => {
-  // //           expect(response.body.msg.roleId).to.equal(2);
-  // //           done();
-  // //         });
-  // //     });
-
-
 });

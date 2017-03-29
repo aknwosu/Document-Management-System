@@ -15,7 +15,7 @@ const data = {
   },
 
   regularUser: {
-    username: faker.internet.userName(),
+    username: 'Cole',
     firstname: faker.name.firstName(),
     lastname: faker.name.lastName(),
     email: faker.internet.email(),

@@ -131,6 +131,25 @@ describe('Documents', () => {
           done();
         });
     });
+    it('should search for documents based on parameters', (done) => {
+      request.get('/search/documents/?q=GOT')
+      .set('authorization', docAdminToken)
+      .end((error, response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body.docs[0].title).to.equal('GOT');
+        done();
+      });
+    });
+
+    it('should search for documents based on parameters', (done) => {
+      request.get('/search/documents/?q=')
+      .set('authorization', docAdminToken)
+      .end((error, response) => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
     it('should catch errors', (done) => {
       request.get('/documents/xyz')
         .set('authorization', regularUserToken)
