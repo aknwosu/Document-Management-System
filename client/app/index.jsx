@@ -1,18 +1,24 @@
 import React from 'react';
 import {render} from 'react-dom';
-import Signup from './components/signup/signup.jsx';
-import Login from './components/login/login.jsx';
+import { Router, Route, indexRoute, browserHistory } from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+import Main from './components/main/main';
+import Signup from './components/signup/signup';
+import Login from './components/login/login';
+import Dashboard from './components/dashboard/dashboard';
+import initialState from './store/initialState'
+import { Provider } from 'react-redux';
+import store from './store/configureStore'
 
-class App extends React.Component {
- render () {
-   return (
-   <div>
-   <div>
-    <Signup  />
-   </div>
-   </div>
-   );
- }
-}
+// let store = configureStore(initialState);
 
-render(<App/>, document.getElementById('app'));
+ render (
+  <Provider store={store}>
+    <Router history={browserHistory}>
+      <Route path="/" component={Main} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/login" component={Login} />
+      <Route path="/dashboard" component={Dashboard} />
+    </Router>
+  </Provider>,
+  document.getElementById('app'));
