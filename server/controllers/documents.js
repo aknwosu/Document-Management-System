@@ -29,7 +29,9 @@ class DocumentController {
           document
         });
       }).catch((err) => {
+        console.log(err);
         res.status(500).json({
+          
           msg: err.message
         });
       });
@@ -51,7 +53,7 @@ class DocumentController {
       query.include = [{ model: db.Users }];
       query.where =
         db.sequelize.or(
-          { userId: req.decoded.id },
+          { userId: req.decoded.userId },
           { access: 'public' },
           db.sequelize.and(
             { access: 'role' },
@@ -90,7 +92,7 @@ class DocumentController {
       .then((document) => {
 
         if (document) {
-          if (req.decoded.id === document.userId
+          if (req.decoded.userId === document.userId
           || req.userType === 'admin' || document.access === 'public') {
             res.status(200).send({
               message: 'Document found',

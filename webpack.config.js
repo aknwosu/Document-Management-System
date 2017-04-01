@@ -14,6 +14,13 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
+  node: {
+    console: true,
+    dns: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  },
   module: {
     loaders: [{
       test: /\.jsx?/,

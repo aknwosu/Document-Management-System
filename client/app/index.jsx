@@ -6,6 +6,8 @@ import Main from './components/main/main';
 import Signup from './components/signup/signup';
 import Login from './components/login/login';
 import Dashboard from './components/dashboard/dashboard';
+import Documents from './components/documents/documents';
+import DocumentDetail from './components/documentDetail/documentDetail';
 import initialState from './store/initialState'
 import { Provider } from 'react-redux';
 import store from './store/configureStore'
@@ -19,6 +21,8 @@ import store from './store/configureStore'
       <Route path="/signup" component={Signup} />
       <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/documents" component={Documents} />
+      <Route path="/documents/:id" component={DocumentDetail} />
     </Router>
   </Provider>,
   document.getElementById('app'));

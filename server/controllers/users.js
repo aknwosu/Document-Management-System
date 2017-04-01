@@ -56,7 +56,7 @@ class UserController {
     .then((user) => {
       if (bcrypt.compareSync(req.body.password, user.password)) {
         const token = jwt.sign({
-          id: user.id,
+          userId: user.id,
           roleId: user.roleId
         }, secret, { expiresIn: '2 days' });
         return res.status(200).send({ message: 'Logged in',
@@ -106,7 +106,7 @@ class UserController {
     db.Users.create(newUser)
       .then((user) => {
         const token = jwt.sign({
-          id: user.id,
+          userId: user.id,
           roleId: user.roleId
         }, secret, { expiresIn: '5 days' });
         return res.status(201).send({
@@ -138,7 +138,7 @@ class UserController {
     db.Users.create(newUser)
       .then((user) => {
         const token = jwt.sign({
-          id: user.id,
+          userId: user.id,
           roleId: user.roleId
         }, secret, { expiresIn: '5 days' });
 

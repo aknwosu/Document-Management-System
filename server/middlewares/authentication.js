@@ -37,7 +37,7 @@ const Authentication = {
   },
 
   validUser(req, res, next) {
-    db.Users.findById(req.decoded.id).then((user) => {
+    db.Users.findById(req.decoded.userId).then((user) => {
       db.Roles.findById(user.roleId).then((role) => {
         if (role.title === 'admin') {
           req.userType = 'admin';
@@ -51,7 +51,7 @@ const Authentication = {
   },
 
   isOwnerOrAdmin(req, res, next) {
-    db.Users.findById(req.decoded.id).then((user) => {
+    db.Users.findById(req.decoded.userId).then((user) => {
       if ((user.roleId === 1)
       || (parseInt(user.id, 10) === parseInt(req.params.id, 10))) {
         next();

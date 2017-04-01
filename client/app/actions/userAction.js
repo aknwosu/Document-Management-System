@@ -20,6 +20,7 @@ const loginEvent = (email, password) => {
       if (response.status === 200) {
         const data = response.data;
         localStorage.setItem('token', data.token);
+        console.log(localStorage.getItem('token'));
         dispatch(loginSuccess(response.data));
       }
       //  else {
