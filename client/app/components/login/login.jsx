@@ -36,7 +36,7 @@ class Login extends React.Component {
   }
 
     render() {
-      console.log(this.props.user);
+      const {loginprops} = (this.props);
       return (
         <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
             <Input s={6} type="email" className="form-control" value={this.state.email} name="email" label="email" validate></Input>

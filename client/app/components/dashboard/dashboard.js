@@ -32,9 +32,27 @@ class Dashboard extends React.Component {
               <li><Link to="/documents">Documents</Link></li>
             </ul>
           </div>
-        </nav>
+        </nav> 
+        <div className="row">
+        <div className="col m3" id="side-nav"> 
+           <ul id="slide-out" className="side-nav fixed">
+             
+            <li className="search">
+              <input id="filter" type="text" label="Search" />
+<i id="filtersubmit" className="material-icons">search</i>
+          </li>
+      <li><a href="#!">First Sidebar Link</a></li>
+      <li><a href="#!">Second Sidebar Link</a></li>
+    </ul>
+    <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
+    <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
+    <a href="#" data-activates="slide-out" className="button-collapse show-on-large"><i className="material-icons">menu</i></a>
+    </div>
+    <div className="col m4">
         <div className="app">
           <AllDocuments documents={this.props.documents} />
+        </div>
+        </div>
         </div>
       </div>
     );
@@ -52,3 +70,4 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+

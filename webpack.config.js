@@ -26,7 +26,13 @@ const config = {
       test: /\.jsx?/,
       include: APP_DIR,
       loader: 'babel-loader'
-    }]
+    },
+    {
+      test: /\.(png|jpg)$/,
+      loader: 'url-loader?limit=8192'
+    },
+    { test: /(\.css)$/,
+      loaders: ['style-loader', 'css-loader'] }]
   }
 };
 

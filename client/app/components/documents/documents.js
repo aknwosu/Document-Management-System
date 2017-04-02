@@ -44,9 +44,9 @@ class Documents extends React.Component {
         </form>*/}
 
         <div className="row">
-        <div className="card col s12 m6">
+        <div className="card">
           <div className="row" onSubmit={this.handleSubmit} onChange={this.handleChange}>
-            <div className="input-field col s6">
+            <div className="input-field col m8">
             <Input type="text"  value={this.state.title} name="title" label="Title"></Input>
             <div className="input-field col m12">
             <textarea type="content" id="textarea1" className="materialize-textarea" value={this.state.content} name="content"></textarea>

@@ -11,6 +11,7 @@ import DocumentDetail from './components/documentDetail/documentDetail';
 import initialState from './store/initialState'
 import { Provider } from 'react-redux';
 import store from './store/configureStore'
+import './styles/styles.css';
 
 // let store = configureStore(initialState);
 
@@ -23,6 +24,6 @@ import store from './store/configureStore'
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/documents" component={Documents} />
       <Route path="/documents/:id" component={DocumentDetail} />
-    </Router>
+    </Router> 
   </Provider>,
   document.getElementById('app'));

@@ -16,12 +16,15 @@ class DocumentDetail extends React.Component {
     const targetDocument = documents.filter(document => document.id === Number(id))
 
     return (
+      <div>
       <div className="card col s12 m6">
         <ul className="card">
           <div>{targetDocument[0].id}</div>
           <div>{targetDocument[0].title}</div>
           <div>{targetDocument[0].content}</div>
         </ul>
+      </div>
+      <button>Delete</button>
       </div>
     );
   }
