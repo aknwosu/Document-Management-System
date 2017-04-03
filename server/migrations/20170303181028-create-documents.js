@@ -19,11 +19,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          models: 'Users',
-          key: 'id'
+          model: 'Users',
+          key: 'id',
+          as: 'userId'
         }
       },
-      accessType: {
+      access: {
         type: Sequelize.STRING,
         allowNull: false
       },

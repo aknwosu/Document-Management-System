@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+import db from '../models';
 
 const secret = process.env.SECRET_TOKEN || 'myverygoodbadtkey';
-const db = require('../models');
 
 const Authentication = {
   requireValidToken(req, res, next) {
@@ -25,17 +25,41 @@ const Authentication = {
   },
 
   isAdmin(req, res, next) {
-    db.Users.findById(req.decoded.id).then((user) => {
+    db.Roles.findById(req.decoded.roleId).then((role) => {
+      if (role.title === 'admin') {
+        next();
+      } else {
+        return res.status(403).send({
+          success: false,
+          message: 'You need to be an admin to use this resource.' });
+      }
+    });
+  },
+
+  validUser(req, res, next) {
+    db.Users.findById(req.decoded.userId).then((user) => {
       db.Roles.findById(user.roleId).then((role) => {
-        if (role.name === 'admin') {
+        if (role.title === 'admin') {
+          req.userType = 'admin';
           next();
         } else {
-          return res.status(401).send({
-            success: false,
-            message: 'You need to be an admin to view use this resource.' });
+          req.userType = 'user';
+          next();
         }
       });
     });
+  },
+
+  isOwnerOrAdmin(req, res, next) {
+    db.Users.findById(req.decoded.userId).then((user) => {
+      if ((user.roleId === 1)
+      || (parseInt(user.id, 10) === parseInt(req.params.id, 10))) {
+        next();
+      } else {
+        return res.status(403).send({ message: 'You are not allowed in here' });
+      }
+    });
   }
 };
-module.exports = Authentication;
+
+export default Authentication;

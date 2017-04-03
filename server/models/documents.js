@@ -8,12 +8,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    accessType: {
+    access: {
       type: DataTypes.STRING,
+      allowNull: false,
       defaultValue: 'public',
       validate: {
         isIn: [['private', 'public', 'role']]

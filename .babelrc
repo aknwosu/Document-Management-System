@@ -1,8 +1,4 @@
 {
-  "presets": ["es2015", "sage-2"],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
-  }
+  "presets": ["es2015", "react"]
+  
 }
