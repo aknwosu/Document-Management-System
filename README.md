@@ -1,1 +1,2 @@
 # Document-Management-System
+[![Coverage Status](https://coveralls.io/repos/github/andela-anwosu/Document-Management-System/badge.svg?branch=master)](https://coveralls.io/github/andela-anwosu/Document-Management-System?branch=master)
