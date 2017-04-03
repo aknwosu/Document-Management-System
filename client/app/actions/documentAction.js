@@ -1,10 +1,16 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
+const hostname = window.location.origin;
+const baseUrl = hostname + "/search/"
+
+const querystring = require('querystring');
+
 export const DOCUMENT_CREATE_SUCCESS = 'DOCUMENT_CREATE_SUCCESS';
 export const DOCUMENT_FETCH_SUCCESS = 'DOCUMENT_FETCH_SUCCESS';
 export const DOCUMENT_FETCH_REJECTED = 'DOCUMENT_FETCH_REJECTED';
-
+export const SEARCH_DOCUMENT_SUCCESS = 'SEARCH_DOCUMENT_SUCCESS';
+export const SEARCH_DOCUMENT_REJECTED = 'SEARCH_DOCUMENT_REJECTED';
 
 const docCreatedSuccess = (document) => {
   console.log('succesful Doc Created');
@@ -12,8 +18,6 @@ const docCreatedSuccess = (document) => {
 }
 
 const createDocAction = (title, content, access, userId) => {
-  console.log(jwt.decode(localStorage.getItem('token')).userId);
-  console.log(title, content);
   return (dispatch) => {
     return axios.post('/documents', {
       title,
@@ -59,15 +63,45 @@ export function getAllDocs() {
         }
       })
       .catch((err) => {
-        console.log(`err: ${err}`);
         dispatch(getDocsRejected(err.data));
-      })
-  }
+      });
+  };
+}
+
+function searchBoxSuccess(searchBox) {
+  return { type: SEARCH_DOCUMENT_SUCCESS, payload: searchBox };
+}
+
+function searchBoxRejected(err) {
+  return { type: SEARCH_DOCUMENT_REJECTED, payload: err };
+}
+
+export function searchBoxAction(searchBox) {
+  const url = baseUrl + "documents/?q=" + searchBox;
+  return (dispatch) => {
+    console.log( window.localStorage.getItem('token'));
+    return axios.get(url, {
+      headers: {
+        authorization: window.localStorage.getItem('token'),
+      }
+    })
+    .then((response) => {
+      if (response.status >= 200 && response.status < 300) {
+        dispatch(searchBoxSuccess(response.data));
+      }
+    }).catch((err) => {
+      console.log(`err: ${err}`);
+      dispatch(searchBoxRejected(err.data));
+    });
+  };
 }
 
 
-export { createDocAction, docCreatedSuccess };
 
-// export { createDocAction };
+export {
+  createDocAction,
+  docCreatedSuccess,
+  searchBoxRejected,
+  searchBoxSuccess };
 
 

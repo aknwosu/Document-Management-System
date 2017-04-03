@@ -7,6 +7,7 @@ import Signup from './components/signup/signup';
 import Login from './components/login/login';
 import Dashboard from './components/dashboard/dashboard';
 import Documents from './components/documents/documents';
+import SearchBox from './components/searchDocs/searchDocs.js';
 import DocumentDetail from './components/documentDetail/documentDetail';
 import initialState from './store/initialState'
 import { Provider } from 'react-redux';
@@ -24,6 +25,7 @@ import './styles/styles.css';
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/documents" component={Documents} />
       <Route path="/documents/:id" component={DocumentDetail} />
+      <Route path="/search/documents" component={SearchBox} />
     </Router> 
   </Provider>,
   document.getElementById('app'));
