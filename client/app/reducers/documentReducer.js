@@ -4,6 +4,9 @@ import {
   DOCUMENT_CREATE_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
   DOCUMENT_FETCH_REJECTED,
+  SEARCH_DOCUMENT_SUCCESS,
+  SEARCH_DOCUMENT_REJECTED
+
 } from '../actions/documentAction';
 
 const initialState = {
@@ -11,6 +14,7 @@ const initialState = {
   documents: [],
   error: {},
   docCreated_Success: false,
+  searchBox_Success: false
 };
 
 export default function documentReducer(state = initialState, action) {
@@ -32,6 +36,18 @@ export default function documentReducer(state = initialState, action) {
       {},
       state,
       { error: action.payload },
+    );
+  case SEARCH_DOCUMENT_SUCCESS:
+    return Object.assign(
+      {},
+      state,
+      { searchBox: action.searchBox, searchBox_Success: true }
+    );
+  case SEARCH_DOCUMENT_REJECTED:
+    return Object.assign(
+      {},
+      state,
+      { error: action.payload }
     );
   default:
     return state;

@@ -7,13 +7,14 @@ const Authentication = {
   requireValidToken(req, res, next) {
     const token = req.headers.authorization || req.headers['x-access-token'];
     if (!token) {
-      return res.status(401).send({
+      return res.status(403).send({
         success: false,
         message: 'No token provided.'
       });
     }
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
+        console.log(err);
         return res.status(401).send({
           success: false,
           message: 'Invalid token.'

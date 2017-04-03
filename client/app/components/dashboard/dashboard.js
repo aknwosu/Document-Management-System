@@ -6,7 +6,8 @@ import { browserHistory, Link } from 'react-router';
 
 import AllDocuments from '../allDocuments/allDocuments';
 
-import { getAllDocs } from '../../actions/documentAction';
+import { getAllDocs, searchBoxAction } from '../../actions/documentAction';
+import { SearchBox } from '../searchDocs/searchDocs';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class Dashboard extends React.Component {
               <li><a onClick={this.logOut}>Log out</a></li>
               <li><Link to="/login">Happy Login</Link></li>
               <li><Link to="/documents">Documents</Link></li>
+              <li><Link to="/search/documents">Search</Link></li>
             </ul>
           </div>
         </nav> 
@@ -38,8 +40,7 @@ class Dashboard extends React.Component {
            <ul id="slide-out" className="side-nav fixed">
              
             <li className="search">
-              <input id="filter" type="text" label="Search" />
-<i id="filtersubmit" className="material-icons">search</i>
+              <input id="filter" type="text" label="Search" /><i id="filtersubmit" className="material-icons">search</i>
           </li>
       <li><a href="#!">First Sidebar Link</a></li>
       <li><a href="#!">Second Sidebar Link</a></li>

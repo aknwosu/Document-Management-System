@@ -37,12 +37,6 @@ class Documents extends React.Component {
       console.log(this.props.user);
       return (
         <div>
-        {/*<form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-            <Input type="title" className="form-control" value={this.state.title} name="title" label="title"></Input>
-            <textarea type="content"  value={this.state.content} name="content" label="content"></textarea>
-             <input onClick={this.handleSubmit} className="waves-effect waves-light btn" type="button" value="submit" />
-        </form>*/}
-
         <div className="row">
         <div className="card">
           <div className="row" onSubmit={this.handleSubmit} onChange={this.handleChange}>
