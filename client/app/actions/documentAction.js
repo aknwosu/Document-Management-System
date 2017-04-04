@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 const hostname = window.location.origin;
 const baseUrl = hostname + "/search/"
 
-const querystring = require('querystring');
 
 export const DOCUMENT_CREATE_SUCCESS = 'DOCUMENT_CREATE_SUCCESS';
 export const DOCUMENT_FETCH_SUCCESS = 'DOCUMENT_FETCH_SUCCESS';
@@ -37,7 +36,6 @@ const createDocAction = (title, content, access, userId) => {
         dispatch(docCreatedSuccess(data));
       }
     }).catch((err) => {
-      console.log(err);
       throw new Error(err);
     });
   };

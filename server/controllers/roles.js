@@ -44,10 +44,10 @@ class RoleController {
    */
   static updateRole(req, res) {
     db.Roles.findOne({
-        where: {
-          title: req.body.title
-        }
-      })
+      where: {
+        title: req.body.title
+      }
+    })
       .then((roleExists) => {
         if (roleExists) {
           return res.status(400).send({
@@ -55,21 +55,20 @@ class RoleController {
           });
         }
         db.Roles.findOne({
-            where: {
-              id: req.params.id
-            }
-          })
-          .then((role) => {
-            role.update(req.body)
-              .then((updatedRole) => {
-                res.status(200).json(updatedRole);
-              });
-          })
-          .catch((err) => {
-            res.status(400).send({
-              message: err
+          where: {
+            id: req.params.id
+          }
+        }).then((role) => {
+          role.update(req.body)
+            .then((updatedRole) => {
+              res.status(200).json(updatedRole);
             });
+        })
+        .catch((err) => {
+          res.status(400).send({
+            message: err
           });
+        });
       });
   }
 

@@ -14,7 +14,9 @@ import Dashboard from './components/dashboard/dashboard';
 import Documents from './components/documents/documents';
 import SearchBox from './components/searchDocs/searchDocs';
 import Management from './components/management/management'
+import AllRoles from './components/management/allRoles'
 import DocumentDetail from './components/documentDetail/documentDetail';
+import UpdateDocument from './components/management/allRoles'
 import initialState from './store/initialState'
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore.js'
@@ -46,6 +48,8 @@ const onEnter = (next, replace, cb) => {
       <Route path="/documents/:id" component={DocumentDetail} onEnter={onEnter} />
       <Route path="/search/documents" component={SearchBox} onEnter={onEnter} />
       <Route path="/management" component={SearchBox} onEnter={onEnter} />
+      <Route path="/allRoles" component={AllRoles} onEnter={onEnter} />
+      <Route path="/roles/:id" commponent={UpdateDocument} onEnter={onEnter} />
     </Router> 
   </Provider>,
   document.getElementById('app'));

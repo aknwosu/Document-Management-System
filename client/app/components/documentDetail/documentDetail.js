@@ -20,7 +20,8 @@ class DocumentDetail extends React.Component {
   render() {
     const { documents } = this.props;
     // const { id } = this.props.routeParams;
-    const targetDocument = documents.filter(document => document.id === Number(this.props.routeParams.id))[0]
+    const targetDocument = documents.filter(document => 
+    document.id === Number(this.props.routeParams.id))[0]
     const { id, title, content } = targetDocument;
 
     return (

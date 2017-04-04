@@ -43,7 +43,7 @@ class Dashboard extends React.Component {
               <input id="filter" type="text" label="Search" /><i id="filtersubmit" className="material-icons">search</i>
           </li>
       <li><Link to="/documents">Create Document</Link></li>
-      <li><a href="#!">Second Sidebar Link</a></li>
+      <li><a href="/allRoles">Roles</a></li>
     </ul>
     <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
     <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>

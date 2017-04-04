@@ -20,7 +20,7 @@ export default class AllDocuments extends React.Component {
     return (
       <div>
         <ul>
-          {mappedDocs || <p>Hello</p>}
+          {mappedDocs || <p>No Documents Here</p>}
         </ul>
       </div>
     );
