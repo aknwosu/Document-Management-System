@@ -4,10 +4,12 @@ import DocumentController from '../controllers/documents';
 
 const router = express.Router();
 
+// Route to get and post documents for a user
 router.route('/')
 .get(Authentication.requireValidToken,
 Authentication.validUser, DocumentController.getDocuments)
 .post(Authentication.requireValidToken, DocumentController.createDocument);
+
 
 router.route('/:id')
 .get(Authentication.requireValidToken,

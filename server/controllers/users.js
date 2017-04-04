@@ -6,12 +6,6 @@ import Paginator from '../helpers/pagination';
 
 const secret = process.env.SECRET_TOKEN || 'myverygoodbadtkey';
 
-/**
- *
- * @param {object} user
- * @param {object} res
- * @returns{object} response object
- */
 const userDetails = (user) => {
   const fields = {
     id: user.id,
@@ -37,6 +31,7 @@ const userAttributes = [
 ];
 
 /**
+ * User Controller class
  *
  * @param {object} req
  * @param {object} res
@@ -63,9 +58,8 @@ class UserController {
           user: userDetails(user),
           token,
           expiresIn: '2 days' });
-      } else {
-        return res.status(500).send({ message: 'Invalid username or password' });
       }
+      return res.status(500).send({ message: 'Invalid username or password' });
     });
   }
   /**
@@ -80,6 +74,7 @@ class UserController {
   }
 
 /**
+ *  Create user class
  *
  * @param {object} req
  * @param {object} res
@@ -87,9 +82,11 @@ class UserController {
  */
   static createUser(req, res) {
     if (req.body.roleId) {
-      return res.status(403).send({ message: 'you can not decide your roleId' });
+      return res.status(403)
+      .send({ message: 'you can not decide your roleId' });
     }
-    db.Users.findOne({ where: { email: req.body.email } || { username: req.body.username } })
+    db.Users.findOne({ where: { email: req.body.email }
+    || { username: req.body.username } })
     .then((userExists) => {
       if (userExists) {
         return res.status(409)
@@ -117,10 +114,15 @@ class UserController {
   }
 
 /**
- * 
+ *  Create user method
+ *
+ * @param {object} req request being sent
+ * @param {object} res object containing response
+ * @returns{object} response object
  */
   static createAdminUser(req, res) {
-    db.Users.findOne({ where: { email: req.body.email } || { username: req.body.username }})
+    db.Users.findOne({ where: { email: req.body.email }
+    || { username: req.body.username } })
     .then((userExists) => {
       if (userExists) {
         return res.status(409)
@@ -150,14 +152,17 @@ class UserController {
         res.status(400).json({ message: err.message });
       });
   }
+
 /**
+ *  Find user method
  *
- * @param {object} req
- * @param {object} res
+ * @param {object} req request being sent
+ * @param {object} res object containing response
  * @returns{object} response object
  */
   static findUser(req, res) {
-    db.Users.findOne({ where: { id: req.params.id }, attributes: userAttributes })
+    db.Users.findOne({ where: { id: req.params.id },
+      attributes: userAttributes })
     .then((user) => {
       if (user) {
         return res.status(200).json({ message: user });
@@ -170,9 +175,10 @@ class UserController {
   }
 
 /**
+ *  Get users method
  *
- * @param {object} req
- * @param {object} res
+ * @param {object} req request being sent
+ * @param {object} res object containing response
  * @returns{object} response object
  */
   static getUsers(req, res) {
@@ -200,9 +206,10 @@ class UserController {
   }
 
 /**
+ *  Update user method
  *
- * @param {object} req
- * @param {object} res
+ * @param {object} req request being sent
+ * @param {object} res object containing response
  * @returns{object} response object
  */
   static updateUser(req, res) {
@@ -227,16 +234,17 @@ class UserController {
   }
 
 /**
- * Deletes a User
- * @param {object} req
- * @param {object} res
+ * Delete a User
+ * @param {object} req request being sent
+ * @param {object} res object containing response
  * @returns{object} response object
  */
   static deleteUser(req, res) {
     db.Users.findOne({ where: { id: req.params.id } })
       .then((user) => {
         if (!user) {
-          return res.status(404).json({ message: `User ${req.params.id} not found` });
+          return res.status(404)
+          .send({ message: `User ${req.params.id} not found` });
         }
         db.Users.destroy({ where: { id: req.params.id } })
           .then(() => {
@@ -246,10 +254,11 @@ class UserController {
   }
 
 /**
+ * Get a User's documents
  *
- * @param {object} req
- * @param {object} res
- * @returns {object} response object
+ * @param {object} req request being sent
+ * @param {object} res object containing response
+ * @returns{object} response object
  */
   static getUserDocuments(req, res) {
     db.Users.findOne({ where: { id: req.params.id } })
@@ -264,9 +273,10 @@ class UserController {
   }
 
 /**
+ * Search for a user
  *
- * @param {object} req
- * @param {object} res
+ * @param {object} req request being sent
+ * @param {object} res object containing response
  * @returns{object} response object
  */
   static searchUser(req, res) {

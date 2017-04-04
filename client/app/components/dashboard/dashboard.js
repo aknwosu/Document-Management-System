@@ -22,6 +22,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
+    const token = localStorage.getItem('token');
     return (
       <div>
         <nav>
@@ -42,8 +43,8 @@ class Dashboard extends React.Component {
             <li className="search">
               <input id="filter" type="text" label="Search" /><i id="filtersubmit" className="material-icons">search</i>
           </li>
-      <li><Link to="/documents">Create Document</Link></li>
-      <li><a href="/allRoles">Roles</a></li>
+    {token && <li><Link to="/documents">Create Document</Link></li>}
+      {token && <li><a href="/allRoles">Roles</a></li>}
     </ul>
     <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
     <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>

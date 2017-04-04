@@ -8,14 +8,6 @@ import testFile from './testFile';
 const expect = chai.expect;
 const request = Request.agent(app);
 
-
-// const regularUserEdit = testFile.regularUserEdit;
-// const regularUserOne = testFile.regularUser1;
-// const regularUserTwo = testFile.regularUser2;
-// const docAdminUser = testFile.adminUser2;
-// const publicDocument1 = testFile.publicDocument1;
-// const publicDocument2 = testFile.publicDocument2;
-// const privateDocument1 = testFile.privateDocument1;
 let docAdminToken, regularUserToken, regularUserToken1;
 
 describe('Documents', () => {
@@ -32,7 +24,8 @@ describe('Documents', () => {
       testFile.regularUser,
       testFile.regularUser1
     ], { individualHooks: true }))
-    .then(() => db.Documents.bulkCreate([testFile.publicDocument1, testFile.privateDocument1]))
+    .then(() => db.Documents
+    .bulkCreate([testFile.publicDocument1, testFile.privateDocument1]))
     .then(() => {
       request.post('/users/login')
         .send(testFile.adminUser)
@@ -80,7 +73,7 @@ describe('Documents', () => {
       .set('authorization', regularUserToken)
       .send(testFile.xyz)
       .end((error, response) => {
-        expect(response.status).to.equal(500);
+        expect(response.status).to.equal(400);
         done();
       });
     });
@@ -122,6 +115,7 @@ describe('Documents', () => {
           done();
         });
     });
+
     it('should not return private documents of users', (done) => {
       request.get('/documents/2')
         .set('authorization', regularUserToken1)
@@ -131,6 +125,7 @@ describe('Documents', () => {
           done();
         });
     });
+
     it('should search for documents based on parameters', (done) => {
       request.get('/search/documents/?q=GOT')
       .set('authorization', docAdminToken)
@@ -154,7 +149,7 @@ describe('Documents', () => {
       request.get('/documents/xyz')
         .set('authorization', regularUserToken)
         .end((err, res) => {
-          expect(res.status).to.equal(500);
+          expect(res.status).to.equal(400);
           done();
         });
     });
@@ -170,6 +165,7 @@ describe('Documents', () => {
         done();
       });
     });
+
     it('should update documents', (done) => {
       request.put('/documents/2')
       .send({ title: 'new title', content: 'new doc content' })
@@ -180,7 +176,7 @@ describe('Documents', () => {
       });
     });
   });
-    
+
   describe('delete', () => {
     it('should check if a document exists before deleting it', (done) => {
       request.delete('/documents/99')
@@ -190,6 +186,7 @@ describe('Documents', () => {
         done();
       });
     });
+
     it('should delete a document', (done) => {
       request.delete('/documents/1')
       .set('authorization', docAdminToken)
@@ -200,5 +197,3 @@ describe('Documents', () => {
     });
   });
 });
-
-

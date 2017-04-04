@@ -12,30 +12,30 @@ class DocumentDetail extends React.Component {
   }
   
 
-  deleteDocument(id) {
-    event.preventDefault();
-      this.props.deleteDocAction(id);
+  deleteDocument() {
+      const { id } = this.props.routeParams;
+      this.props.deleteDocAction(Number(id));
   }
 
   render() {
     const { documents } = this.props;
     // const { id } = this.props.routeParams;
     const targetDocument = documents.filter(document => 
-    document.id === Number(this.props.routeParams.id))[0]
+      document.id === Number(this.props.routeParams.id))[0]
     const { id, title, content } = targetDocument;
 
     return (
       <div>
-      <div className="card col s12 m6">
-        <ul className="card">
-          <div value={id}>{id}</div>
-          <div>{title}</div>
-          <div>{content}</div>
-        </ul>
-      </div>
-      <div>
-      <button onClick={this.deleteDocument(id)}>Delete</button>
-      </div>
+        <div className="card col s12 m6">
+          <ul className="card">
+            <div value={id}>{id}</div>
+            <div>{title}</div>
+            <div>{content}</div>
+          </ul>
+        </div>
+        <div>
+          <button onClick={this.deleteDocument}>Delete</button>
+        </div>
       </div>
     );
   }

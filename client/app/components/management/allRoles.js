@@ -11,10 +11,11 @@ class AllRoles extends React.Component {
     this.props.getAllRolesAction();
 
     this.state = {
-      title: Object.assign({}, props.currentRole).title,
+      title: 'ddd',
       roleId: undefined
     }
     this.onChange = this.onChange.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   componentDidMount() {
@@ -26,36 +27,53 @@ class AllRoles extends React.Component {
   }
 
   onClick(event) {
+    debugger;
     event.preventDefault();
-    this.props.getRole(this.props.id);
+    const selectedId = event.currentTarget.getAttribute('data-id');
+    console.log('selectedId', selectedId)
+    console.log('event.currentTarget.getAttribute', event.currentTarget.getAttribute('data-id'))
+    const role = this.props.roles.filter(role => role.id == selectedId);
+    console.log(role, "role")
+    this.setState({ title: role[0].title });
+    $('.modal').modal('open');
   }
 
   onChange(event){
-    console.log(nextProps);
     event.preventDefault();
     this.setState({title: event.target.value, roleId: this.props.currentRole.id})
   }
 
   render() {
-    const roles = this.props.getRolesSuccess;
+    const { roles } = this.props;
     console.log("all roles", roles);
-    const mappedRoles = roles.map((role, index) => <a className="card-panel" key={role.id} 
-                                                      href="#modal1" onClick={this.onClick}>
-      <Link>
+    const mappedRoles = roles.map((role, index) => 
+      <a
+        className="card-panel"
+        key={role.id} 
+        data-id={role.id}
+        onClick={this.onClick}
+      >
         {role.title}
-      </Link>
-    </a>);
+      </a>
+    );
 
     return (
       <div>
         <div id="modal1" className="modal">
           <div className="modal-content">
             <h4>Modal Header</h4>
-            <input value="" placeholder="Enter Role Here"
-              onChange={this.onChange} />
+            <input
+              value={this.state.title}
+              onChange={this.onChange}
+            />
           </div>
           <div className="modal-footer">
-            <a href="#!" onClick={this.updateDocument} className="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+            <button
+              onClick={this.updateRole}
+              className="modal-action modal-close waves-effect waves-green btn-flat"
+            >
+              Update
+            </button>
           </div>
         </div>
         <ul>
@@ -67,7 +85,7 @@ class AllRoles extends React.Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    getRolesSuccess: state.rolesReducer.allRoles,
+    roles: state.rolesReducer.allRoles,
     currentRole: state.rolesReducer.currentRole
 }
 }

@@ -43,7 +43,6 @@ componentWillReceiveProps(nextProps) {
     const changeProps = {};
     changeProps[event.target.name] = event.target.value;
     this.setState(changeProps);
-    this.setState({access: event.target.value});
   }
 
   handleSubmit(event) {
@@ -53,7 +52,7 @@ event.preventDefault();
       toastr.error('Please enter the required fields');
     } else {
       this.props
-    this.props.createDocAction(this.state.title, this.state.content, 'public', jwt.decode(localStorage.getItem('token')).userId)
+    this.props.createDocAction(this.state.title, this.state.content, this.state.access, jwt.decode(localStorage.getItem('token')).userId)
         .then(() => {
           toastr.success('Document created');
         }).catch(() => {
@@ -75,6 +74,7 @@ event.preventDefault();
 
 
     render() {
+      const token = localStorage.getItem('token');
       console.log(this.props.user);
       return (
         <div>
@@ -97,8 +97,8 @@ event.preventDefault();
               
           </div>
           <div className="col s3">
-              <div className="input-field col s8">
-                <select className="form-control" value={this.state.access} name="access" id="selection">
+              <div className="chip col s8">
+                <select className="browser-default" onChange={this.handleChange} value={this.state.access} name="access">
                   <option value="">Choose an access type</option>
                   <option name="public">Public</option>
                   <option name="private">Private</option>
