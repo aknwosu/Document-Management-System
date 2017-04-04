@@ -19,3 +19,7 @@ margin-top: 80px;
     cursor:pointer;
     width: 0;
 }
+
+#access-chip {
+  padding-bottom: 8px;
+}

@@ -2,29 +2,39 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
-import { getAllDocs } from '../../actions/documentAction';
+import { getAllDocs, deleteDocAction } from '../../actions/documentAction';
 
 
 class DocumentDetail extends React.Component {
   constructor(props) {
     super(props);
+    this.deleteDocument = this.deleteDocument.bind(this)
+  }
+  
+
+  deleteDocument(id) {
+    event.preventDefault();
+      this.props.deleteDocAction(id);
   }
 
   render() {
     const { documents } = this.props;
-    const { id } = this.props.routeParams;
-    const targetDocument = documents.filter(document => document.id === Number(id))
+    // const { id } = this.props.routeParams;
+    const targetDocument = documents.filter(document => document.id === Number(this.props.routeParams.id))[0]
+    const { id, title, content } = targetDocument;
 
     return (
       <div>
       <div className="card col s12 m6">
         <ul className="card">
-          <div>{targetDocument[0].id}</div>
-          <div>{targetDocument[0].title}</div>
-          <div>{targetDocument[0].content}</div>
+          <div value={id}>{id}</div>
+          <div>{title}</div>
+          <div>{content}</div>
         </ul>
       </div>
-      <button>Delete</button>
+      <div>
+      <button onClick={this.deleteDocument(id)}>Delete</button>
+      </div>
       </div>
     );
   }
@@ -38,6 +48,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
     getAllDocs,
+    deleteDocAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentDetail);

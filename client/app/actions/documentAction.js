@@ -11,6 +11,9 @@ export const DOCUMENT_FETCH_SUCCESS = 'DOCUMENT_FETCH_SUCCESS';
 export const DOCUMENT_FETCH_REJECTED = 'DOCUMENT_FETCH_REJECTED';
 export const SEARCH_DOCUMENT_SUCCESS = 'SEARCH_DOCUMENT_SUCCESS';
 export const SEARCH_DOCUMENT_REJECTED = 'SEARCH_DOCUMENT_REJECTED';
+export const DELETE_DOCUMENT_SUCCESS = 'DELETE_DOCUMENT_SUCCESS';
+export const DELETE_DOCUMENT_REJECTED = 'DELETE_DOCUMENT_REJECTED';
+
 
 const docCreatedSuccess = (document) => {
   console.log('succesful Doc Created');
@@ -77,9 +80,9 @@ function searchBoxRejected(err) {
 }
 
 export function searchBoxAction(searchBox) {
-  const url = baseUrl + "documents/?q=" + searchBox;
+  const url = `${baseUrl}documents/?q=${searchBox}`;
+  console.log(`URL: ${url}`);
   return (dispatch) => {
-    console.log( window.localStorage.getItem('token'));
     return axios.get(url, {
       headers: {
         authorization: window.localStorage.getItem('token'),
@@ -87,16 +90,34 @@ export function searchBoxAction(searchBox) {
     })
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
+        console.log(response.data);
         dispatch(searchBoxSuccess(response.data));
       }
     }).catch((err) => {
-      console.log(`err: ${err}`);
       dispatch(searchBoxRejected(err.data));
     });
   };
 }
 
+export const docDeletedSuccess = (deleteDoc) => {
+  console.log('succesful Doc Created');
+  return { type: DELETE_DOCUMENT_SUCCESS, deleteDoc };
+}
+export const docDeletedRejected = (err) => {
+  return { type: DELETE_DOCUMENT_REJECTED, payload: err };
+}
 
+export function deleteDocAction(id) {
+  return (dispatch) => {
+    axios.delete(`/documents/${id}`, {
+      headers: {
+        authorization: window.localStorage.getItem('token'),
+      }
+    }).catch((err) => {
+      dispatch(docDeletedRejected(err.data));
+    });
+  };
+}
 
 export {
   createDocAction,

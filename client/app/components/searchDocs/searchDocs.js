@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { createDocAction, searchBoxAction } from '../../actions/documentAction';
 
-class SearhBox extends React.Component {
+class SearchBox extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      searchBox: ''
+      searchTerm: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,7 +23,7 @@ class SearhBox extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.searchBoxAction(this.state.searchBox)
+    this.props.searchBoxAction(this.state.searchTerm)
   }
 
 
@@ -36,7 +36,7 @@ class SearhBox extends React.Component {
         <div className="card">
           <div className="row">
             <div className="input-field col m8"  onChange={this.handleChange} >
-            <input type="text" name='searchBox' value={this.state.searchBox} label="searchBox" />
+            <input type="text" name='searchTerm' value={this.state.searchTerm} label="searchBox" />
             </div>
               
           </div>
@@ -49,7 +49,8 @@ class SearhBox extends React.Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    searchBox_Success: state.documentReducer.searchBox_Success
+    searchBox: state.documentReducer.searchBox
+    
   }
 }
 
@@ -57,4 +58,4 @@ const  mapDispatchToProps = {
     searchBoxAction
   }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearhBox);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBox);

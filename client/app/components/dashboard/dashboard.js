@@ -30,7 +30,7 @@ class Dashboard extends React.Component {
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               <li><a onClick={this.logOut}>Log out</a></li>
               <li><Link to="/login">Happy Login</Link></li>
-              <li><Link to="/documents">Documents</Link></li>
+              
               <li><Link to="/search/documents">Search</Link></li>
             </ul>
           </div>
@@ -42,7 +42,7 @@ class Dashboard extends React.Component {
             <li className="search">
               <input id="filter" type="text" label="Search" /><i id="filtersubmit" className="material-icons">search</i>
           </li>
-      <li><a href="#!">First Sidebar Link</a></li>
+      <li><Link to="/documents">Create Document</Link></li>
       <li><a href="#!">Second Sidebar Link</a></li>
     </ul>
     <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
