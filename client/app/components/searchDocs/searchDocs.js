@@ -19,6 +19,7 @@ class SearchBox extends React.Component {
     const changeProps = {};
     changeProps[event.target.name] = event.target.value;
     this.setState(changeProps);
+    console.log('state', this.state.SearchBox);
   }
 
   handleSubmit(event) {
@@ -28,8 +29,10 @@ class SearchBox extends React.Component {
 
 
     render() {
-      // console.log(this.props.user);
+      console.log("issa props", this.props.searchResult);
+      console.log("issa props", this.state.searchResult);
       return (
+        
         <div>
 
         <div className="row">
@@ -43,14 +46,15 @@ class SearchBox extends React.Component {
           <button className="waves-effect btn" onClick={this.handleSubmit} type="button" value="submit">Search</button>
         </div>
         </div>
+          <div className="card">{this.props.searchResult}</div>
         </div>
       );
     } 
 }
 const mapStateToProps = (state, ownProps) => {
+  console.log("searchResult", state.documentReducer.searchBox);
   return {
-    searchBox: state.documentReducer.searchBox
-    
+    searchResult: state.documentReducer.searchBox
   }
 }
 

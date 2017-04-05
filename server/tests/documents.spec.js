@@ -68,6 +68,16 @@ describe('Documents', () => {
       });
     });
 
+    it('should check that a token is valid', (done) => {
+      request.post('/documents')
+      .set('authorization', ' ')
+      .send(testFile.publicDocument3)
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
+        done();
+      });
+    });
+
     it('should catch errors', (done) => {
       request.post('/documents')
       .set('authorization', regularUserToken)

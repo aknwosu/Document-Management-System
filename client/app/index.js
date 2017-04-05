@@ -1,6 +1,5 @@
 import React from 'react';
 import {render} from 'react-dom';
-import TinyMCE from 'react-tinymce';
 import { Router, Route, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import '../../node_modules/font-awesome/css/font-awesome.min.css';

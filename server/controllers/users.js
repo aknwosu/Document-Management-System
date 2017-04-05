@@ -59,7 +59,7 @@ class UserController {
           token,
           expiresIn: '2 days' });
       }
-      return res.status(500).send({ message: 'Invalid username or password' });
+      return res.status(400).send({ message: 'Invalid username or password' });
     });
   }
   /**

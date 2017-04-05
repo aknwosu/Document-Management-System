@@ -35,8 +35,8 @@ class DocumentController {
 
   /**
    * Method to get documents
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req request being sent
+   * @param {object} res response containing object
    * @returns{object} response object
    */
   static getDocuments(req, res) {
@@ -116,6 +116,7 @@ class DocumentController {
    * @returns{object} response object
    */
   static updateDocument(req, res) {
+    console.log(req.body);
     db.Documents.findOne({
       where: {
         id: req.params.id
@@ -132,7 +133,7 @@ class DocumentController {
             msg: 'Document updated'
           });
         }).catch((err) => {
-          res.status(500).json({
+          res.status(400).json({
             error: err.message
           });
         });

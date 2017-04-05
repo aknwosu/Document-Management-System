@@ -115,7 +115,7 @@ describe('Users', () => {
         email: testFile.regularUser3.email,
         password: 'notAPassword' })
         .end((error, response) => {
-          expect(response.status).to.equal(500);
+          expect(response.status).to.equal(400);
           expect(response.body.message)
           .to.equal('Invalid username or password');
           done();
@@ -143,6 +143,25 @@ describe('Users', () => {
       .end((error, response) => {
         expect(response.status).to.equal(200);
         expect(response.body.message.firstname).to.equal('Alibaba');
+        done();
+      });
+    });
+
+    it('should check that a token is valid', (done) => {
+      request.put('/users/7')
+      .set('authorization', 'justNotAToken')
+      .send({ firstname: 'Alibaba' })
+      .end((error, response) => {
+        expect(response.status).to.equal(401);
+        done();
+      });
+    });
+
+    it('should check that a token is supplied', (done) => {
+      request.put('/users/7')
+      .send({ firstname: 'Alibaba' })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
         done();
       });
     });

@@ -7,7 +7,6 @@ import logger from 'morgan';
 import routes from './server/routes/index';
 
 const app = express();
-// app.use(express.static('client/public'));
 console.log(`${__dirname}/client/index.html}`);
 app.use(parser.urlencoded({
   extended: true
