@@ -116,7 +116,6 @@ class DocumentController {
    * @returns{object} response object
    */
   static updateDocument(req, res) {
-    console.log(req.body);
     db.Documents.findOne({
       where: {
         id: req.params.id
