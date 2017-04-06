@@ -14,8 +14,11 @@ Authentication.validUser, DocumentController.getDocuments)
 router.route('/:id')
 .get(Authentication.requireValidToken,
 Authentication.validUser, DocumentController.findDocument)
+
 .put(Authentication.requireValidToken,
-Authentication.validUser, DocumentController.updateDocument)
+Authentication.validUser, Authentication.isOwnerOrAdmin,
+DocumentController.updateDocument)
+
 .delete(Authentication.requireValidToken,
 Authentication.isAdmin, DocumentController.deleteDocument);
 

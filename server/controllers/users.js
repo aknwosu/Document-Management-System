@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import db from '../models';
 import Paginator from '../helpers/pagination';
 
-
 const secret = process.env.SECRET_TOKEN || 'myverygoodbadtkey';
 
 const userDetails = (user) => {
@@ -39,28 +38,36 @@ const userAttributes = [
  */
 class UserController {
 
-/**
- * User Login
- * Route: POST: /users/login
- * @param {object} req
- * @param {object} res
- * @returns{object} response object
- */
+  /**
+   * User Login
+   * Route: POST: /users/login
+   * @param {object} req
+   * @param {object} res
+   * @returns{object} response object
+   */
   static login(req, res) {
-    db.Users.findOne({ where: { email: req.body.email } })
-    .then((user) => {
-      if (bcrypt.compareSync(req.body.password, user.password)) {
-        const token = jwt.sign({
-          userId: user.id,
-          roleId: user.roleId
-        }, secret, { expiresIn: '2 days' });
-        return res.status(200).send({ message: 'Logged in',
-          user: userDetails(user),
-          token,
-          expiresIn: '2 days' });
-      }
-      return res.status(400).send({ message: 'Invalid username or password' });
-    });
+    db
+      .Users
+      .findOne({
+        where: {
+          email: req.body.email
+        }
+      })
+      .then((user) => {
+        if (bcrypt.compareSync(req.body.password, user.password)) {
+          const token = jwt.sign({
+            userId: user.id,
+            roleId: user.roleId,
+            username: user.username
+          }, secret, { expiresIn: '2 days' });
+          return res
+            .status(200)
+            .send({ message: 'Logged in', user: userDetails(user), token, expiresIn: '2 days' });
+        }
+        return res
+          .status(400)
+          .send({ message: 'Invalid username or password' });
+      });
   }
   /**
    * User Logout
@@ -70,65 +77,96 @@ class UserController {
    * @returns {object} response object
    */
   static logout(req, res) {
-    return res.status(201).send({ message: 'Logged out' });
+    return res
+      .status(201)
+      .send({ message: 'Logged out' });
   }
 
-/**
- *  Create user class
- *
- * @param {object} req
- * @param {object} res
- * @returns{object} response object
- */
+  /**
+   *  Create user class
+   *
+   * @param {object} req
+   * @param {object} res
+   * @returns{object} response object
+   */
   static createUser(req, res) {
     if (req.body.roleId) {
-      return res.status(403)
-      .send({ message: 'you can not decide your roleId' });
+      return res
+        .status(403)
+        .send({ message: 'you can not decide your roleId' });
     }
-    db.Users.findOne({ where: { email: req.body.email }
-    || { username: req.body.username } })
-    .then((userExists) => {
-      if (userExists) {
-        return res.status(409)
-        .send({ message: 'User already exists' });
-      }
-    });
+    if (!req.body.username || !req.body.firstname || !req.body.lastname || !req.body.password || !req.body.email) {
+      return res
+        .status(422)
+        .send({ message: 'Please complete all fields' });
+    }
+    db
+      .Users
+      .findOne({
+        where: {
+          email: req.body.email
+        } || {
+          username: req.body.username
+        }
+      })
+      .then((userExists) => {
+        if (userExists) {
+          return res
+            .status(409)
+            .send({ message: 'User already exists' });
+        }
+      });
     const newUser = {
       username: req.body.username,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       password: req.body.password,
-      email: req.body.email,
+      email: req.body.email
     };
-    db.Users.create(newUser)
+    db
+      .Users
+      .create(newUser)
       .then((user) => {
         const token = jwt.sign({
           userId: user.id,
-          roleId: user.roleId
-        }, secret, { expiresIn: '5 days' });
-        return res.status(201).send({
-          message: `${user.username} created`,
-          user: userDetails(user),
-          token });
-      }).catch(err => res.status(400).send({ message: err.message }));
+          roleId: user.roleId,
+          username: user.username
+        }, secret, { expiresIn: '2 days' });
+        return res
+          .status(201)
+          .send({
+            message: `${user.username} created`,
+            user: userDetails(user),
+            token,
+            expiresIn: '2 days' });
+      })
+      .catch(err => res.status(400).send({ message: err.message }));
   }
 
-/**
- *  Create user method
- *
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
+  /**
+   *  Create user method
+   *
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
   static createAdminUser(req, res) {
-    db.Users.findOne({ where: { email: req.body.email }
-    || { username: req.body.username } })
-    .then((userExists) => {
-      if (userExists) {
-        return res.status(409)
-        .send({ message: 'User already exists' });
-      }
-    });
+    db
+      .Users
+      .findOne({
+        where: {
+          email: req.body.email
+        } || {
+          username: req.body.username
+        }
+      })
+      .then((userExists) => {
+        if (userExists) {
+          return res
+            .status(409)
+            .send({ message: 'User already exists' });
+        }
+      });
     const newUser = {
       username: req.body.username,
       firstname: req.body.firstname,
@@ -137,164 +175,224 @@ class UserController {
       email: req.body.email,
       roleId: 1
     };
-    db.Users.create(newUser)
+    db
+      .Users
+      .create(newUser)
       .then((user) => {
         const token = jwt.sign({
           userId: user.id,
           roleId: user.roleId
-        }, secret, { expiresIn: '5 days' });
+        }, secret, { expiresIn: '2 days' });
 
-        return res.status(201).send({
-          message: `${user.username} created`,
-          user: userDetails(user),
-          token });
-      }).catch((err) => {
-        res.status(400).json({ message: err.message });
+        return res
+          .status(201)
+          .send({
+            message: `${user.username} created`,
+            user: userDetails(user),
+            token,
+            expiresIn: '2 days' });
+      })
+      .catch((err) => {
+        res
+          .status(400)
+          .json({ message: err.message });
       });
   }
 
-/**
- *  Find user method
- *
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
+  /**
+   *  Find user method
+   *
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
   static findUser(req, res) {
-    db.Users.findOne({ where: { id: req.params.id },
-      attributes: userAttributes })
+    db.Users.findOne({
+      where: {
+        id: req.params.id
+      },
+      attributes: userAttributes
+    })
     .then((user) => {
       if (user) {
-        return res.status(200).json({ message: user });
+        return res.status(200)
+          .json({ message: user });
       }
-      return res.status(404).send({ message: 'Not found' });
+      return res.status(404)
+      .send({ message: 'Not found' });
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res
+        .status(500)
+        .send({ message: err.message });
     });
   }
 
-/**
- *  Get users method
- *
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
+  /**
+   *  Get users method with pagination
+   *
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
   static getUsers(req, res) {
     const query = {};
-    query.limit = (req.query.limit > 0) ? req.query.limit : 10;
-    query.offset = (req.query.offset > 0) ? req.query.offset : 0;
+    query.limit = (req.query.limit > 0)
+      ? req.query.limit : 20;
+    query.offset = (req.query.offset > 0)
+      ? req.query.offset : 0;
     if (req.userType === 'admin') {
       query.attributes = userAttributes;
     } else if (req.userType === 'user') {
       query.attributes = ['id', 'username'];
     }
-    db.Users.findAndCountAll(query)
-    .then((users) => {
-      const metaData = {
-        count: users.count,
-        limit: query.limit,
-        offset: query.offset
-      };
-      delete users.count;
-      const pageData = Paginator.paginate(metaData);
-      return res.status(200).json({
-        users,
-        pageData });
-    });
+    db
+      .Users
+      .findAndCountAll(query)
+      .then((users) => {
+        const metaData = {
+          count: users.count,
+          limit: query.limit,
+          offset: query.offset
+        };
+        delete users.count;
+        const pageData = Paginator.paginate(metaData);
+        return res
+          .status(200)
+          .json({ users, pageData });
+      });
   }
 
-/**
- *  Update user method
- *
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
+  /**
+   *  Update user method
+   *
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
   static updateUser(req, res) {
-    db.Users.findOne({ where: { id: req.params.id } })
-    .then((user) => {
-      if (!user) {
-        return res.status(404)
-        .send({ message: 'Not found' });
-      }
-      const allowedFields = ['firstname', 'lastname', 'password'];
-
-      allowedFields.forEach((field) => {
-        user[field] = req.body[field] ? req.body[field] : user[field];
-      });
-
-      user.save().then(() => {
-        res.status(200).send({ message: userDetails(user) });
-      });
-    }).catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-  }
-
-/**
- * Delete a User
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
-  static deleteUser(req, res) {
-    db.Users.findOne({ where: { id: req.params.id } })
+    db
+      .Users
+      .findOne({
+        where: {
+          id: req.params.id
+        }
+      })
       .then((user) => {
         if (!user) {
-          return res.status(404)
-          .send({ message: `User ${req.params.id} not found` });
+          return res
+            .status(404)
+            .send({ message: 'Not found' });
         }
-        db.Users.destroy({ where: { id: req.params.id } })
+        const allowedFields = ['firstname', 'lastname', 'password'];
+
+        allowedFields.forEach((field) => {
+          user[field] = req.body[field]
+            ? req.body[field]
+            : user[field];
+        });
+
+        user
+          .save()
           .then(() => {
-            res.status(204).send({ message: 'User deleted' });
+            res
+              .status(200)
+              .send({ message: 'User updated',
+                User: userDetails(user) });
           });
+      })
+      .catch((err) => {
+        res
+          .status(500)
+          .send({ message: err.message });
       });
   }
 
-/**
- * Get a User's documents
- *
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
-  static getUserDocuments(req, res) {
-    db.Users.findOne({ where: { id: req.params.id } })
-   .then((user) => {
-     user.getDocuments().then((documents) => {
-       res.status(200).json({ message: documents });
-     });
-   })
-   .catch((err) => {
-     res.status(404).json({ message: err.message });
-   });
+  /**
+   * Delete a User
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
+  static deleteUser(req, res) {
+    db
+      .Users
+      .findOne({
+        where: {
+          id: req.params.id
+        }
+      })
+      .then((user) => {
+        if (!user) {
+          return res
+            .status(404)
+            .send({ message: `User ${req.params.id} not found` });
+        }
+        db.Users.destroy({
+          where: {
+            id: req.params.id
+          }
+        })
+        .then(() => {
+          res.status(200).json({ message: 'User deleted successfully' });
+        });
+      });
   }
 
-/**
- * Search for a user
- *
- * @param {object} req request being sent
- * @param {object} res object containing response
- * @returns{object} response object
- */
+  /**
+   * Get a User's documents
+   *
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
+  static getUserDocuments(req, res) {
+    db.Documents.findAll({
+      where: {
+        userId: req.params.id
+      }
+    }).then((documents) => {
+      if (documents.length < 1) {
+        return res.status(404)
+      .send({ message: 'No documents belonging to you found' });
+      }
+      return res.status(200).json({ message: documents, count: documents.length });
+    }).catch((err) => {
+      res.status(400).json({
+        message: err.message
+      });
+    });
+  }
+
+  /**
+   * Search for a user
+   *
+   * @param {object} req request being sent
+   * @param {object} res object containing response
+   * @returns{object} response object
+   */
   static searchUser(req, res) {
     if (req.query.q) {
-      db.Users.findOne({
-        where: {
-          username: {
-            $iLike: `%${req.query.q}%`
+      db
+        .Users
+        .findAll({
+          where: {
+            username: {
+              $iLike: `%${req.query.q}%`
+            }
           }
-        }
-      }).then((user) => {
-        res.status(200).json({ message: user });
-      });
+        })
+        .then((user) => {
+          res
+            .status(200)
+            .json({ message: user });
+        });
     } else {
-      return res.status(404).json({ error: 'Provide a query' });
+      return res
+        .status(404)
+        .json({ error: 'Provide a query' });
     }
   }
 }
 
 export default UserController;
-

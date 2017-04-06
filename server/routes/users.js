@@ -18,7 +18,8 @@ router.route('/:id')
 .get(Authentication.requireValidToken,
 Authentication.isOwnerOrAdmin, UserController.findUser)
 .put(Authentication.requireValidToken,
-Authentication.validUser, UserController.updateUser)
+Authentication.validUser,
+Authentication.isOwnerOrAdmin, UserController.updateUser)
 .delete(Authentication.requireValidToken,
 Authentication.isAdmin, UserController.deleteUser);
 
@@ -30,6 +31,7 @@ router.route('/logout')
 
 router.route('/:id/documents')
 .get(Authentication.requireValidToken,
-Authentication.validUser, UserController.getUserDocuments);
+Authentication.validUser,
+UserController.getUserDocuments);
 
 export default router;

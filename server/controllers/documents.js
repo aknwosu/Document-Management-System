@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import db from '../models';
 import Paginator from '../helpers/pagination';
 
@@ -18,17 +19,17 @@ class DocumentController {
       title: req.body.title,
       content: req.body.content,
       access: req.body.access,
-      userId: req.body.userId
+      userId: req.decoded.userId
     };
     db.Documents.create(newDoc)
       .then((document) => {
         res.status(201).json({
-          msg: 'Document created',
+          message: 'Document created',
           document
         });
       }).catch((err) => {
         res.status(400).json({
-          msg: err.message
+          message: err.message
         });
       });
   }
@@ -41,12 +42,12 @@ class DocumentController {
    */
   static getDocuments(req, res) {
     const query = {};
-    query.limit = (req.query.limit > 0) ? req.query.limit : 10;
+    query.limit = (req.query.limit > 0) ? req.query.limit : 20;
     query.offset = (req.query.offset > 0) ? req.query.offset : 0;
     if (req.userType === 'admin') {
       query.where = {};
     } else if (req.userType === 'user') {
-      query.include = [{ model: db.Users }];
+      query.include = [{ model: db.Users, attributes: [ 'id'] }];
       query.where =
         db.sequelize.or(
           { userId: req.decoded.userId },
@@ -68,7 +69,7 @@ class DocumentController {
       delete documents.count;
       const pageData = Paginator.paginate(metaData);
       res.status(200).json({
-        msg: 'Document found',
+        msg: 'Documents found',
         documents,
         pageData
       });
@@ -116,7 +117,6 @@ class DocumentController {
    * @returns{object} response object
    */
   static updateDocument(req, res) {
-    console.log(req.body);
     db.Documents.findOne({
       where: {
         id: req.params.id
