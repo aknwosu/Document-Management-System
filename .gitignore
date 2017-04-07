@@ -28,3 +28,9 @@ node_modules
 
 #vscode configuration
 .vscode
+
+client/public/
+feedback.md
+selenium-debug.log
+screenshots
+reports

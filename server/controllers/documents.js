@@ -1,18 +1,17 @@
+import jwt from 'jsonwebtoken';
 import db from '../models';
 import Paginator from '../helpers/pagination';
 
 /**
- *
- * @param {object} req
- * @param {object} res
- * @returns{object} response object
+ * Class for handling document operations
  */
 class DocumentController {
 
   /**
+   * Create Document
    *
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req being sent
+   * @param {object} res containing response
    * @returns{object} response object
    */
   static createDocument(req, res) {
@@ -20,44 +19,43 @@ class DocumentController {
       title: req.body.title,
       content: req.body.content,
       access: req.body.access,
-      userId: req.body.userId
+      userId: req.decoded.userId
     };
     db.Documents.create(newDoc)
       .then((document) => {
         res.status(201).json({
-          msg: 'Document created',
+          message: 'Document created',
           document
         });
       }).catch((err) => {
-        console.log(err);
-        res.status(500).json({
-          
-          msg: err.message
+        res.status(400).json({
+          message: err.message
         });
       });
   }
 
   /**
-   *
-   * @param {object} req
-   * @param {object} res
+   * Method to get documents
+   * @param {object} req request being sent
+   * @param {object} res response containing object
    * @returns{object} response object
    */
   static getDocuments(req, res) {
     const query = {};
-    query.limit = (req.query.limit > 0) ? req.query.limit : 10;
+    query.limit = (req.query.limit > 0) ? req.query.limit : 20;
     query.offset = (req.query.offset > 0) ? req.query.offset : 0;
     if (req.userType === 'admin') {
       query.where = {};
     } else if (req.userType === 'user') {
-      query.include = [{ model: db.Users }];
+      query.include = [{ model: db.Users, attributes: ['id'] }];
       query.where =
         db.sequelize.or(
           { userId: req.decoded.userId },
           { access: 'public' },
           db.sequelize.and(
             { access: 'role' },
-            db.sequelize.where(db.sequelize.col('User.roleId'), '=', req.decoded.roleId)
+            db.sequelize
+            .where(db.sequelize.col('User.roleId'), '=', req.decoded.roleId)
           )
         );
     }
@@ -71,16 +69,17 @@ class DocumentController {
       delete documents.count;
       const pageData = Paginator.paginate(metaData);
       res.status(200).json({
-        msg: 'Document found',
+        msg: 'Documents found',
         documents,
         pageData
       });
     });
   }
   /**
+   * Method to find documents
    *
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req being sent
+   * @param {object} res containing response
    * @returns{object} response object
    */
   static findDocument(req, res) {
@@ -90,7 +89,6 @@ class DocumentController {
       }
     })
       .then((document) => {
-
         if (document) {
           if (req.decoded.userId === document.userId
           || req.userType === 'admin' || document.access === 'public') {
@@ -105,16 +103,17 @@ class DocumentController {
           return res.status(404).send({ message: 'Not found' });
         }
       }).catch((err) => {
-        res.status(500).json({
+        res.status(400).json({
           msg: err.message
         });
       });
   }
 
   /**
+   * Method to update documents
    *
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req being sent
+   * @param {object} res containing response
    * @returns{object} response object
    */
   static updateDocument(req, res) {
@@ -131,10 +130,10 @@ class DocumentController {
         document.content = req.body.content;
         document.save().then(() => {
           res.status(200).json({
-            msg: 'User updated'
+            msg: 'Document updated'
           });
         }).catch((err) => {
-          res.status(500).json({
+          res.status(400).json({
             error: err.message
           });
         });
@@ -142,9 +141,10 @@ class DocumentController {
   }
 
   /**
+   * Method to delete documents
    *
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req being sent
+   * @param {object} res containing response
    * @returns{object} response object
    */
   static deleteDocument(req, res) {
@@ -173,9 +173,10 @@ class DocumentController {
   }
 
   /**
+   * Method to search documents
    *
-   * @param {object} req
-   * @param {object} res
+   * @param {object} req being sent
+   * @param {object} res containing response
    * @returns{object} response object
    */
   static searchDocument(req, res) {
@@ -191,6 +192,7 @@ class DocumentController {
         }
       }).then((document) => {
         res.status(200).json({
+          message: 'Documents found',
           docs: document
         });
       });

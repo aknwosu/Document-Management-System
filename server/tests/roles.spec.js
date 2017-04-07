@@ -1,6 +1,5 @@
 import chai from 'chai';
 import Request from 'supertest';
-import dotenv from 'dotenv';
 import db from '../models';
 import app from '../../server';
 import testFile from './testFile';
@@ -8,7 +7,7 @@ import testFile from './testFile';
 const expect = chai.expect;
 const request = Request.agent(app);
 
-let rolesAdminUserToken, rolesRegularUserToken, rolesRegularUser, rolesRegularUserToken2;
+let rolesAdminUserToken, rolesRegularUserToken, rolesRegularUserToken2;
 
 describe('Roles', () => {
   before((done) => {
@@ -20,7 +19,8 @@ describe('Roles', () => {
 
   before((done) => {
     db.Roles.bulkCreate([testFile.adminRole, testFile.userRole])
-    .then(() => db.Users.bulkCreate([testFile.adminUser, testFile.regularUser], { individualHooks: true }))
+    .then(() => db.Users.bulkCreate([testFile.adminUser, testFile.regularUser],
+    { individualHooks: true }))
     .then(() => {
       request.post('/users/login')
       .send(testFile.adminUser)
@@ -55,6 +55,7 @@ describe('Roles', () => {
       });
     });
 
+
     it('should check if a role already exists', (done) => {
       request.post('/roles').send(testFile.userRole)
       .set('authorization', rolesAdminUserToken)
@@ -66,7 +67,6 @@ describe('Roles', () => {
     });
   });
 
-  
   describe('Get roles', () => {
     it('should return all roles to the admin', (done) => {
       request.get('/roles')
@@ -89,7 +89,7 @@ describe('Roles', () => {
       });
       });
     });
-    
+
     it('should return a specic role to the admin', (done) => {
       request.get('/roles/2')
       .set('authorization', rolesAdminUserToken)
@@ -135,6 +135,7 @@ describe('Roles', () => {
           });
       });
     });
+
     it('should not let users update roles', (done) => {
       request.put('/roles/5')
       .set('authorization', rolesRegularUserToken2)
@@ -144,6 +145,7 @@ describe('Roles', () => {
         done();
       });
     });
+
     it('should fail to update role if title already exists', (done) => {
       request.put('/roles/5')
       .set('authorization', rolesAdminUserToken)
@@ -153,6 +155,7 @@ describe('Roles', () => {
         done();
       });
     });
+
     it('should fail to update if the role does not exist', (done) => {
       request.put('/roles/xyz')
       .set('authorization', rolesAdminUserToken)
@@ -172,6 +175,7 @@ describe('Roles', () => {
         done();
       });
     });
+
     it('should catch errors', (done) => {
       request.put('/roles')
       .set('authorization', rolesAdminUserToken)
@@ -198,7 +202,8 @@ describe('Roles', () => {
         .set('authorization', rolesAdminUserToken)
         .end((error, response) => {
           expect(response.status).to.equal(403);
-          expect(response.body.message).to.equal('You cannot delete the admin role');
+          expect(response.body.message)
+          .to.equal('You cannot delete the admin role');
           done();
         });
     });
@@ -208,7 +213,8 @@ describe('Roles', () => {
         .set('authorization', rolesRegularUserToken2)
         .end((error, response) => {
           expect(response.status).to.equal(403);
-          expect(response.body.message).to.equal('You need to be an admin to use this resource.');
+          expect(response.body.message)
+          .to.equal('You need to be an admin to use this resource.');
           done();
         });
     });

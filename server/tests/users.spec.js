@@ -4,7 +4,6 @@ import db from '../models';
 import app from '../../server';
 import testFile from './testFile';
 
-let userToken;
 const expect = chai.expect;
 const request = Request.agent(app);
 let adminToken, regularUserToken, regularUserToken3;
@@ -39,7 +38,6 @@ describe('Users', () => {
       });
   });
   describe('Create admin user', () => {
-
     it('should successfully create an admin', (done) => {
       request.post('/users/createAdminUser').send(testFile.adminUser1)
       .set('authorization', adminToken)
@@ -81,7 +79,7 @@ describe('Users', () => {
         done();
       });
     });
-    
+
     it('should not let users create admin users',
     (done) => {
       request.post('/users').send(testFile.dontBeAdmin)
@@ -111,12 +109,13 @@ describe('Users', () => {
           done();
         });
     });
+
     it('Should not log in users with the wrong password', (done) => {
       request.post('/users/login').send({
         email: testFile.regularUser3.email,
         password: 'notAPassword' })
         .end((error, response) => {
-          expect(response.status).to.equal(500);
+          expect(response.status).to.equal(400);
           expect(response.body.message)
           .to.equal('Invalid username or password');
           done();
@@ -143,7 +142,26 @@ describe('Users', () => {
       .send({ firstname: 'Alibaba' })
       .end((error, response) => {
         expect(response.status).to.equal(200);
-        expect(response.body.message.firstname).to.equal('Alibaba');
+        expect(response.body.User.firstname).to.equal('Alibaba');
+        done();
+      });
+    });
+
+    it('should check that a token is valid', (done) => {
+      request.put('/users/7')
+      .set('authorization', 'justNotAToken')
+      .send({ firstname: 'Alibaba' })
+      .end((error, response) => {
+        expect(response.status).to.equal(401);
+        done();
+      });
+    });
+
+    it('should check that a token is supplied', (done) => {
+      request.put('/users/7')
+      .send({ firstname: 'Alibaba' })
+      .end((error, response) => {
+        expect(response.status).to.equal(403);
         done();
       });
     });
@@ -158,6 +176,7 @@ describe('Users', () => {
         done();
       });
     });
+
     it('should allow admins update a user', (done) => {
       request.put('/users/7')
         .send({ firstname: 'Dannie' })
@@ -180,7 +199,7 @@ describe('Users', () => {
 
     it('should handle errors', (done) => {
       request.put('/users/xyz')
-      .set('authorization', regularUserToken3)
+      .set('authorization', adminToken)
       .send({ firstname: 'mimi' })
       .end((error, response) => {
         expect(response.status).to.equal(500);
@@ -190,7 +209,6 @@ describe('Users', () => {
   });
 
   describe('Get a user', () => {
-
     it('should fetch a user if requested by the owner', (done) => {
       request.get('/users/7')
         .set('authorization', regularUserToken3)
@@ -204,11 +222,11 @@ describe('Users', () => {
       request.get('/users/7')
       .set('authorization', regularUserToken)
       .end((error, response) => {
-        expect(response.status).to.equal(403);
+        expect(response.status).to.equal(401);
         done();
       });
     });
-    
+
     it('should not return not found if user does not exist', (done) => {
       request.get('/users/99')
       .set('authorization', adminToken)
@@ -218,7 +236,7 @@ describe('Users', () => {
         done();
       });
     });
-     
+
     it('should catch errors', (done) => {
       request.get('/users/xyz')
       .set('authorization', adminToken)
@@ -238,12 +256,13 @@ describe('Users', () => {
         done();
       });
     });
+
     it('should find users based on search terms', (done) => {
       request.get('/search/users/?q=Cole')
       .set('authorization', adminToken)
       .end((error, response) => {
         expect(response.status).to.equal(200);
-        expect(response.body.message.username).to.equal('Cole');
+        expect(response.body.user[0].username).to.equal('Cole');
         done();
       });
     });
@@ -265,6 +284,7 @@ describe('Users', () => {
         done();
       });
     });
+
     it('should catch errors', (done) => {
       request.get('/users/xyz')
       .set('authorization', adminToken)
@@ -284,6 +304,7 @@ describe('Users', () => {
         done();
       });
     });
+
     it('should should restrict details of users', (done) => {
       request.get('/users')
       .set('authorization', regularUserToken)
@@ -292,7 +313,7 @@ describe('Users', () => {
         done();
       });
     });
-   
+
     it('should paginate the result of getting all users', (done) => {
       request.get('/users/?limit=4&offset=0')
       .set('authorization', adminToken)
@@ -301,7 +322,6 @@ describe('Users', () => {
         done();
       });
     });
-
 
     it('should catch errors', (done) => {
       request.get('/users/xyz')
@@ -322,11 +342,12 @@ describe('Users', () => {
         done();
       });
     });
+
     it('should delete a user', (done) => {
       request.delete('/users/5')
       .set('authorization', adminToken)
       .end((err, res) => {
-        expect(res.status).to.equal(204);
+        expect(res.status).to.equal(200);
         done();
       });
     });
@@ -336,7 +357,8 @@ describe('Users', () => {
       .set('authorization', regularUserToken3)
       .end((err, res) => {
         expect(res.status).to.equal(403);
-        expect(res.body.message).to.equal('You need to be an admin to use this resource.');
+        expect(res.body.message)
+        .to.equal('You need to be an admin to use this resource.');
         done();
       });
     });

@@ -1,19 +1,35 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import jwt from 'jsonwebtoken';
+import {connect} from 'react-redux';
+import {browserHistory, Link} from 'react-router';
 
 // import { Navbar, NavItem, Icon } from 'react-materialize';
 
 import AllDocuments from '../allDocuments/allDocuments';
 
-import { getAllDocs, searchBoxAction } from '../../actions/documentAction';
-import { SearchBox } from '../searchDocs/searchDocs';
+import {getAllDocs, searchBoxAction} from '../../actions/documentAction';
+import {getUserDocsAction, updateUserAction} from '../../actions/userAction';
+import UserDocuments from '../userDocuments/userDocuments';
+
+import {SearchBox} from '../searchDocs/searchDocs';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+      this.state = {
+      showUserDocument: false,
+      searchTerm: '',
+      search : false,
+      userId: jwt.decode(localStorage.getItem('token')).userId,
+      username: jwt.decode(localStorage.getItem('token')).username
+
+    };
     this.props.getAllDocs();
     this.logOut = this.logOut.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleClick.bind = this.handleClick.bind(this);
+
   }
 
   logOut() {
@@ -21,39 +37,81 @@ class Dashboard extends React.Component {
     browserHistory.push('/');
   }
 
+handleClick(){
+  this.setState({showUserDocument: true})
+}
+
+ handleChange(event) {
+    const changeProps = {};
+    this.setState({searchTerm: event.target.value});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.setState({search: true});
+    this.props.searchBoxAction(this.state.searchTerm)
+  }
+
   render() {
+    const token = localStorage.getItem('token');
     return (
       <div>
+      <div className="navbar-fixed">
         <nav>
-          <div className="nav-wrapper purple darken-4 z-depth-3">
+          <div className="nav-wrapper purple darken-4">
             <Link to="/" className="brand-logo">DocumentIt!</Link>
-            <ul id="nav-mobile" className="right hide-on-med-and-down">
-              <li><a onClick={this.logOut}>Log out</a></li>
-              <li><Link to="/login">Happy Login</Link></li>
-              <li><Link to="/documents">Documents</Link></li>
-              <li><Link to="/search/documents">Search</Link></li>
+            <ul id="nav-mobile" className="right">
+              <li>
+                <a>Hello {this.state.username}</a>
+              </li>
+              <li>
+                <a onClick={this.logOut}>Log out</a>
+              </li>
+              <li>
+                <Link to="/search/documents">Search</Link>
+              </li>
             </ul>
           </div>
-        </nav> 
+        </nav>
+      </div>
         <div className="row">
-        <div className="col m3" id="side-nav"> 
-           <ul id="slide-out" className="side-nav fixed">
-             
-            <li className="search">
-              <input id="filter" type="text" label="Search" /><i id="filtersubmit" className="material-icons">search</i>
-          </li>
-      <li><a href="#!">First Sidebar Link</a></li>
-      <li><a href="#!">Second Sidebar Link</a></li>
-    </ul>
-    <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
-    <a href="#" data-activates="slide-out" className="button-collapse"><i className="material-icons">menu</i></a>
-    <a href="#" data-activates="slide-out" className="button-collapse show-on-large"><i className="material-icons">menu</i></a>
-    </div>
-    <div className="col m4">
-        <div className="app">
-          <AllDocuments documents={this.props.documents} />
-        </div>
-        </div>
+          <div className="col m3" id="side-nav">
+            <ul id="slide-out" className="side-nav fixed">
+
+              <li className="search">
+                <input onChange={this.handleChange}  value={this.state.searchTerm} id="filter" type="text" label="Search"/>
+                <i onClick={this.handleSubmit} id="filtersubmit" name='searchTerm' className="material-icons">search</i>
+              </li>
+              
+              {token && <li id="sidechip">
+                <Link  className="chip z-depth-3 white-text hoverable purple darken-2" id="sidechip" to="/documents">Create Document</Link>
+              </li>}
+              {token && <li id="sidechip">
+                <a  className="chip z-depth-3 hoverable" id="sidechip" href="/allRoles">Roles</a>
+              </li>}
+              <li id="sidechip">
+                <a className="chip z-depth-3  hoverable white-text purple darken-2" onClick={this.handleClick}>My Documents</a>
+              </li>
+              <li id="sidechip"><Link to="/settings" className="chip z-depth-3 hoverable">Settings</Link></li>
+              <li id="sidechip"><Link to="/allUsers"  className="chip white-text hoverable z-depth-3 purple darken-2">All Users</Link></li>
+            </ul>
+            <a
+              href="#"
+              data-activates="slide-out"
+              className="button-collapse show-on-large">
+              <i className="material-icons">menu</i>
+            </a>
+          </div>
+          <div className="col m4">
+            <div className="app">
+              
+              {this.state.showUserDocument ?<div><h4>User Documents</h4> <UserDocuments /></div> : ""}
+              {this.state.search ? <h4>Search Result....</h4>: ""}
+              <AllDocuments  documents={this.props.searchResult} />
+              <h4> Documents</h4>
+              <AllDocuments documents={this.props.documents}/>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -61,14 +119,14 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    documents: state.documentReducer.documents,
-  }
+  return {documents: state.documentReducer.documents,
+    searchResult: state.documentReducer.searchBox,
+    getUserDocs: state.userReducer.userDocs
+}
 }
 
 const mapDispatchToProps = {
-    getAllDocs,
+  getAllDocs, searchBoxAction, getUserDocsAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
-

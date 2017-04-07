@@ -5,16 +5,24 @@ import {
   DOCUMENT_FETCH_SUCCESS,
   DOCUMENT_FETCH_REJECTED,
   SEARCH_DOCUMENT_SUCCESS,
-  SEARCH_DOCUMENT_REJECTED
+  SEARCH_DOCUMENT_REJECTED,
+  DELETE_DOCUMENT_SUCCESS,
+  DELETE_DOCUMENT_REJECTED,
+  UPDATE_DOCUMENT_SUCCESS,
+  UPDATE_DOCUMENT_REJECTED
 
 } from '../actions/documentAction';
 
 const initialState = {
   document: {},
   documents: [],
+  searchBox: [],
   error: {},
   docCreated_Success: false,
-  searchBox_Success: false
+  searchBox_Success: false,
+  docDeletedSuccess: false,
+  updateDocumentSuccess: false,
+  updateDocumentRejected: false
 };
 
 export default function documentReducer(state = initialState, action) {
@@ -24,6 +32,18 @@ export default function documentReducer(state = initialState, action) {
       {},
       state,
       { document: action.document, docCreated_Success: true }
+    );
+  case UPDATE_DOCUMENT_SUCCESS:
+    return Object.assign(
+      {},
+      state,
+      { updateDoc: action.payload, updateDocumentSuccess: true }
+    );
+  case UPDATE_DOCUMENT_REJECTED:
+    return Object.assign(
+      {},
+      state,
+      { error: action.payload, updateDocumentRejected: true }
     );
   case DOCUMENT_FETCH_SUCCESS:
     return Object.assign(
@@ -41,7 +61,7 @@ export default function documentReducer(state = initialState, action) {
     return Object.assign(
       {},
       state,
-      { searchBox: action.searchBox, searchBox_Success: true }
+      { searchBox: action.payload.docs }
     );
   case SEARCH_DOCUMENT_REJECTED:
     return Object.assign(
@@ -49,6 +69,8 @@ export default function documentReducer(state = initialState, action) {
       state,
       { error: action.payload }
     );
+  case DELETE_DOCUMENT_SUCCESS:
+    return Object.assign({}, state, { deleteDoc: action.deleteDoc, docDeletedSuccess: true })
   default:
     return state;
   }

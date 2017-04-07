@@ -11,7 +11,7 @@ const data = {
     title: 'guest1'
   },
   badRole: {
-    title: ""
+    title: ''
   },
 
   regularUser: {
@@ -117,7 +117,7 @@ const data = {
     email: 'nodaniel2@amin.com',
     password: 'feefeesho'
   },
- 
+
   regularUser1edit: {
     username: 'damin2',
     firstname: 'Daniel2',
