@@ -6,11 +6,13 @@ import '../../node_modules/font-awesome/css/font-awesome.min.css';
 import '../../node_modules/materialize-css/dist/css/materialize.min.css';
 import '../../node_modules/materialize-css/dist/js/materialize.min';
 import '../../node_modules/material-icons/css/material-icons.css';
+import '../../node_modules/react-table/react-table.css';
 import Main from './components/main/main';
 import Signup from './components/signup/signup';
 import Login from './components/login/login';
 import Dashboard from './components/dashboard/dashboard';
 import Documents from './components/documents/documents';
+import AllUsers from './components/users/allUsers'
 import SearchBox from './components/searchDocs/searchDocs';
 import UserDocuments from './components/userDocuments/userDocuments';
 import Management from './components/management/management'
@@ -51,6 +53,7 @@ const onEnter = (next, replace, cb) => {
       <Route path="/search/documents" component={SearchBox} onEnter={onEnter} />
       <Route path="/management" component={SearchBox} onEnter={onEnter} />
       <Route path="/allRoles" component={AllRoles} onEnter={onEnter} />
+      <Route path="/allUsers" component={AllUsers} onEnter={onEnter} />
       <Route path="/users/:id/documents" component={UserDocuments} onEnter={onEnter}/>
       {/*<Route path="/roles/:id" commponent={updateRole} onEnter={onEnter} />*/}
     </Router> 

@@ -5,10 +5,10 @@ UPDATE_ROLES_SUCCESS,
 UPDATE_ROLES_REJECTED,
 DELETE_ROLE_SUCCESS,
 DELETE_ROLE_REJECTED,
-
 } from '../actions/rolesAction';
 
 const initialState = {
+
   allRoles: [],
   error: {},
   currentRole: {},
@@ -46,7 +46,7 @@ export default function rolesReducer(state = initialState, action) {
       { error: action.payload, updateRoleRejected: true }
     );
   case DELETE_ROLE_SUCCESS:
-    return Object.assign({}, state, { deleteRole: action.deleteRole, roleDeletedSuccess: true })
+    return Object.assign({}, state, { deleteRole: action.payload, roleDeletedSuccess: true })
   case DELETE_ROLE_REJECTED:
     return Object.assign(
       {},

@@ -222,7 +222,7 @@ describe('Users', () => {
       request.get('/users/7')
       .set('authorization', regularUserToken)
       .end((error, response) => {
-        expect(response.status).to.equal(403);
+        expect(response.status).to.equal(401);
         done();
       });
     });

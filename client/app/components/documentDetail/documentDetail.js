@@ -21,14 +21,12 @@ class DocumentDetail extends React.Component {
     {title:"",
     model: ""}
   }
-  // handleModelChange(content) {   this.setState({ content }); }
 
   deleteDocument() {
     const {id} = this.props;
     this.props.deleteDocAction(id);
   }
 updateDocument(e) {
-  console.log("updating?????")
   const { id, title, model } = this.state
   e.preventDefault();
   this.props.updateDocumentAction(id, title, model);
@@ -45,7 +43,6 @@ onTitleChange(event){
 
 componentDidMount(){
  const {documents} = this.props;
-    // const { id } = this.props.routeParams;
     const targetDocument = documents.filter(document => document.id === Number(this.props.routeParams.id))[0]
     const {id, title, content} = targetDocument;
     this.setState({title, model:content, id})
@@ -56,7 +53,6 @@ componentDidMount(){
       <div>
         <div className="card small col m4">
           <ul>
-            {/*<div value={id}>{id}</div>*/}
             <input onChange={this.onTitleChange} type="text" name="fname" value={this.state.title}/>
             <FroalaEditor
               tag="textarea"

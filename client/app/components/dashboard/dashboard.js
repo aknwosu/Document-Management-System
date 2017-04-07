@@ -62,7 +62,7 @@ handleClick(){
             <Link to="/" className="brand-logo">DocumentIt!</Link>
             <ul id="nav-mobile" className="right">
               <li>
-                <a>Welcome {this.state.username}</a>
+                <a>Hello {this.state.username}</a>
               </li>
               <li>
                 <a onClick={this.logOut}>Log out</a>
@@ -84,15 +84,16 @@ handleClick(){
               </li>
               
               {token && <li id="sidechip">
-                <Link  className="chip z-depth-3" id="sidechip" to="/documents">Create Document</Link>
+                <Link  className="chip z-depth-3 white-text hoverable purple darken-2" id="sidechip" to="/documents">Create Document</Link>
               </li>}
               {token && <li id="sidechip">
-                <a  className="chip z-depth-3" id="sidechip" href="/allRoles">Roles</a>
+                <a  className="chip z-depth-3 hoverable" id="sidechip" href="/allRoles">Roles</a>
               </li>}
               <li id="sidechip">
-                <i onClick={this.handleClick}  className="chip z-depth-3" id="sidechip">My Documents</i>
+                <a className="chip z-depth-3  hoverable white-text purple darken-2" onClick={this.handleClick}>My Documents</a>
               </li>
-              <li><Link to="/settings">Settings</Link></li>}
+              <li id="sidechip"><Link to="/settings" className="chip z-depth-3 hoverable">Settings</Link></li>
+              <li id="sidechip"><Link to="/allUsers"  className="chip white-text hoverable z-depth-3 purple darken-2">All Users</Link></li>
             </ul>
             <a
               href="#"

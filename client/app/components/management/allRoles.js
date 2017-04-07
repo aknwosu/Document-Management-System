@@ -8,20 +8,16 @@ import {getAllRolesAction, updateRolesAction, deleteRoleAction} from '../../acti
 class AllRoles extends React.Component {
   constructor(props) {
     super(props);
-    this
-      .props
-      .getAllRolesAction();
+    this.props.getAllRolesAction();
 
     this.state = {
       title: '',
-      roleId: undefined
+      roleId: ''
     }
-    this.onChange = this
-      .onChange
-      .bind(this);
-    this.onClick = this
-      .onClick
-      .bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onClick = this.onClick.bind(this);
+    this.deleteRole = this.deleteRole.bind(this);
+    this.updateRole = this.updateRole.bind(this);
   }
 
   componentDidMount() {
@@ -29,28 +25,25 @@ class AllRoles extends React.Component {
   }
 
   updateRole() {
-    updateRolesAction(this.state)
+    const id = this.state.roleId;
+    const title = this.state.title;
+    this.props.updateRolesAction(id, title)
   }
   deleteRole() {
-    console.log(this.state);
+    this.props.deleteRoleAction(this.state.roleId);
   }
 
   onClick(event) {
     event.preventDefault();
-    const selectedId = event
-      .currentTarget
-      .getAttribute('data-id');
-    const role = this
-      .props
-      .roles
-      .filter(role => role.id == selectedId);
-    this.setState({title: role[0].title});
+    const selectedId = event.currentTarget.getAttribute('data-id');
+    const role = this.props.roles.filter(role => role.id == selectedId);
+    this.setState({title: role[0].title, roleId: role[0].id});
     $('.modal').modal('open');
   }
 
   onChange(event) {
     event.preventDefault();
-    this.setState({title: event.target.value, roleId: this.props.currentRole.id})
+    this.setState({title: event.target.value})
   }
 
   render() {
@@ -62,6 +55,7 @@ class AllRoles extends React.Component {
       data-id={role.id}
       onClick={this.onClick}>
       {role.title}
+
     </a>);
 
     return (
@@ -92,7 +86,10 @@ class AllRoles extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  return {roles: state.rolesReducer.allRoles, currentRole: state.rolesReducer.currentRole}
+  return {roles: state.rolesReducer.allRoles,
+    currentRole: state.rolesReducer.currentRole,
+    deletedUser: state.rolesReducer
+}
 }
 
 const mapDispatchToProps = {

@@ -63,14 +63,12 @@ class Documents extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.handleChange);
     $('select').material_select();
     $('#selection').on('change', this.handleChange);
   }
 
   render() {
     const token = localStorage.getItem('token');
-    console.log(this.props.user);
     return (
       <div>
         <div className="row">

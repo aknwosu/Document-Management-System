@@ -26,7 +26,6 @@ const initialState = {
 };
 
 export default function documentReducer(state = initialState, action) {
-  console.log(action.type);
   switch (action.type) {
   case DOCUMENT_CREATE_SUCCESS:
     return Object.assign(

@@ -27,7 +27,6 @@ class UserDocuments extends React.Component {
   }
 
   render() {
-    console.log(this.props.userDocuments);
 
     const mappedDocs = this.props.userDocuments.map((document) =>
     <li className="card-panel" key={document.id}>
@@ -46,7 +45,6 @@ class UserDocuments extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
   return {userDocuments: state.userReducer.userDocs.documents
 
   }

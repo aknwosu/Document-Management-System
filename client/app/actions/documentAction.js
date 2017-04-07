@@ -20,7 +20,6 @@ export const UPDATE_DOCUMENT_REJECTED = 'UPDATE_DOCUMENT_REJECTED';
 
 
 const docCreatedSuccess = (document) => {
-  console.log('succesful Doc Created');
   return { type: DOCUMENT_CREATE_SUCCESS, document };
 };
 
@@ -47,7 +46,6 @@ const createDocAction = (title, content, access, userId) => {
 };
 
 export function updateDocumentSuccess(updateDoc) {
-  console.log("updatedoc", updateDoc)
   return { type: UPDATE_DOCUMENT_SUCCESS, payload: updateDoc };
 }
 export function updateDocumentRejected(err) {
@@ -56,10 +54,8 @@ export function updateDocumentRejected(err) {
 
 export function updateDocumentAction(id, title, content) {
   return (dispatch) => {
-    console.log(`${hostname}/documents/${id}`);
     return axios.put(`${hostname}/documents/${id}`, { title, content }, config)
     .then((response) => {
-      console.log('response', response.data);
       if (response.status >= 200 && response.status < 300) {
         dispatch(updateDocumentSuccess());
       }
@@ -107,7 +103,6 @@ function searchBoxRejected(err) {
 
 export function searchBoxAction(searchBox) {
   const url = `${baseUrl}documents/?q=${searchBox}`;
-  console.log(url);
   return (dispatch) => {
     return axios.get(url, {
       headers: {
@@ -117,7 +112,6 @@ export function searchBoxAction(searchBox) {
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         dispatch(searchBoxSuccess(response.data));
-        console.log(response.data);
       }
     }).catch((err) => {
       dispatch(searchBoxRejected(err.data));
