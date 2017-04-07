@@ -9,6 +9,7 @@ import AllDocuments from '../allDocuments/allDocuments';
 
 import {getAllDocs, searchBoxAction} from '../../actions/documentAction';
 import {getUserDocsAction, updateUserAction} from '../../actions/userAction';
+import UserDocuments from '../userDocuments/userDocuments';
 
 import {SearchBox} from '../searchDocs/searchDocs';
 
@@ -16,6 +17,7 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
       this.state = {
+      showUserDocument: false,
       searchTerm: '',
       search : false,
       userId: jwt.decode(localStorage.getItem('token')).userId,
@@ -26,12 +28,18 @@ class Dashboard extends React.Component {
     this.logOut = this.logOut.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleClick.bind = this.handleClick.bind(this);
+
   }
 
   logOut() {
     localStorage.clear('token');
     browserHistory.push('/');
   }
+
+handleClick(){
+  this.setState({showUserDocument: true})
+}
 
  handleChange(event) {
     const changeProps = {};
@@ -82,7 +90,7 @@ class Dashboard extends React.Component {
                 <a  className="chip z-depth-3" id="sidechip" href="/allRoles">Roles</a>
               </li>}
               <li id="sidechip">
-                <Link  className="chip z-depth-3" id="sidechip" to={`/users/${this.state.userId}/documents`}>My Documents</Link>
+                <i onClick={this.handleClick}  className="chip z-depth-3" id="sidechip">My Documents</i>
               </li>
               <li><Link to="/settings">Settings</Link></li>}
             </ul>
@@ -95,6 +103,8 @@ class Dashboard extends React.Component {
           </div>
           <div className="col m4">
             <div className="app">
+              
+              {this.state.showUserDocument ?<div><h4>User Documents</h4> <UserDocuments /></div> : ""}
               {this.state.search ? <h4>Search Result....</h4>: ""}
               <AllDocuments  documents={this.props.searchResult} />
               <h4> Documents</h4>

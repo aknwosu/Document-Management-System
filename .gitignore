@@ -31,3 +31,6 @@ node_modules
 
 client/public/
 feedback.md
+selenium-debug.log
+screenshots
+reports

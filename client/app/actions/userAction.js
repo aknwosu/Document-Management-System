@@ -72,10 +72,12 @@ export function getUserDocsAction(userId) {
       authorization: window.localStorage.getItem('token') },
     })
     .then((response) => {
+      console.log("full response", response);
       if (response.status >= 200 && response.status < 300) {
-        dispatch(getUserDocsSuccess(response.data));
+        return dispatch(getUserDocsSuccess(response.data));
       }
     }).catch((err) => {
+      console.log("error", err);
       dispatch(getUserDocsRejected(err.data));
     });
   };

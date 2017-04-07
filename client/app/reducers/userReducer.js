@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   user: {},
-  userDocs: [],
+  userDocs: {documents: []},
   login_success: false,
   signup_success: false,
   getUserDocs_Success: false,

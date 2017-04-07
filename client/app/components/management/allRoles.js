@@ -13,7 +13,7 @@ class AllRoles extends React.Component {
       .getAllRolesAction();
 
     this.state = {
-      title: 'ddd',
+      title: '',
       roleId: undefined
     }
     this.onChange = this
@@ -32,6 +32,7 @@ class AllRoles extends React.Component {
     updateRolesAction(this.state)
   }
   deleteRole() {
+    console.log(this.state);
   }
 
   onClick(event) {

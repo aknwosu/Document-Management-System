@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
 import {createDocAction, searchBoxAction} from '../../actions/documentAction';
 import {getUserDocsAction} from '../../actions/userAction';
+import {Link} from 'react-router';
 
 class UserDocuments extends React.Component {
 
@@ -12,7 +13,7 @@ class UserDocuments extends React.Component {
     this.state = {
       userId: jwt.decode(localStorage.getItem('token')).userId,
   
-    userDoc: this.props.getUserDocsAction(jwt.decode(localStorage.getItem('token')).userId)
+    // userDoc: this.props.getUserDocsAction(jwt.decode(localStorage.getItem('token')).userId)
   };
     }
     
@@ -20,33 +21,34 @@ class UserDocuments extends React.Component {
     // this.handleSubmit = this.handleSubmit.bind(this);
   
    componentWillMount() {
-     this.setState({responsedoc: this.props.getUserDocsAction(this.state.userId)}) ;
+     this.props.getUserDocsAction(this.state.userId)
+    //  this.setState({responsedoc: this.props.getUserDocsAction(this.state.userId)}) ;
     
   }
 
   render() {
-    console.log("imma state", this.state)
-        // console.log("imma prop", this.props.userDoc)
+    console.log(this.props.userDocuments);
 
-    const { userDocuments } = this.props;
-    console.log("this.props.userdocuments", this.props.userDocuments);
-    // const mappedDocs = documents.map((document) =>
-    <li className="card-panel" key={this.state.userId}>
-      {this.props.userDocuments}
-    </li>
+    const mappedDocs = this.props.userDocuments.map((document) =>
+    <li className="card-panel" key={document.id}>
+      <Link to={`/documents/${document.id}`}>
+        {document.title}
+      </Link>
+    </li>);
+
     return (
-
       <div>
-      <ul>
-        <p>{this.props.userDocuments}</p>
-         <p>No Documents Here</p>
+        <ul>
+          {mappedDocs || <p>No Documents Here</p>}
         </ul>
       </div>
     );
   }
 }
 const mapStateToProps = (state, ownProps) => {
+  console.log(state);
   return {userDocuments: state.userReducer.userDocs.documents
+
   }
 
 }
