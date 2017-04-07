@@ -1,4 +1,5 @@
 import React from 'react';
+import jwt from 'jsonwebtoken';
 import {connect} from 'react-redux';
 import {browserHistory, Link} from 'react-router';
 
@@ -7,6 +8,8 @@ import {browserHistory, Link} from 'react-router';
 import AllDocuments from '../allDocuments/allDocuments';
 
 import {getAllDocs, searchBoxAction} from '../../actions/documentAction';
+import {getUserDocsAction, updateUserAction} from '../../actions/userAction';
+
 import {SearchBox} from '../searchDocs/searchDocs';
 
 class Dashboard extends React.Component {
@@ -14,7 +17,10 @@ class Dashboard extends React.Component {
     super(props);
       this.state = {
       searchTerm: '',
-      search : false
+      search : false,
+      userId: jwt.decode(localStorage.getItem('token')).userId,
+      username: jwt.decode(localStorage.getItem('token')).username
+
     };
     this.props.getAllDocs();
     this.logOut = this.logOut.bind(this);
@@ -29,9 +35,7 @@ class Dashboard extends React.Component {
 
  handleChange(event) {
     const changeProps = {};
-    // changeProps[event.target.name] = event.target.value;
     this.setState({searchTerm: event.target.value});
-    console.log('state', this.state.SearchBox);
   }
 
   handleSubmit(event) {
@@ -44,10 +48,14 @@ class Dashboard extends React.Component {
     const token = localStorage.getItem('token');
     return (
       <div>
+      <div className="navbar-fixed">
         <nav>
-          <div className="nav-wrapper purple darken-4 z-depth-3">
+          <div className="nav-wrapper purple darken-4">
             <Link to="/" className="brand-logo">DocumentIt!</Link>
             <ul id="nav-mobile" className="right">
+              <li>
+                <a>Welcome {this.state.username}</a>
+              </li>
               <li>
                 <a onClick={this.logOut}>Log out</a>
               </li>
@@ -57,6 +65,7 @@ class Dashboard extends React.Component {
             </ul>
           </div>
         </nav>
+      </div>
         <div className="row">
           <div className="col m3" id="side-nav">
             <ul id="slide-out" className="side-nav fixed">
@@ -72,6 +81,10 @@ class Dashboard extends React.Component {
               {token && <li id="sidechip">
                 <a  className="chip z-depth-3" id="sidechip" href="/allRoles">Roles</a>
               </li>}
+              <li id="sidechip">
+                <Link  className="chip z-depth-3" id="sidechip" to={`/users/${this.state.userId}/documents`}>My Documents</Link>
+              </li>
+              <li><Link to="/settings">Settings</Link></li>}
             </ul>
             <a
               href="#"
@@ -95,12 +108,14 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("searchResult", state.documentReducer.searchBox);
-  return {documents: state.documentReducer.documents,   searchResult: state.documentReducer.searchBox}
+  return {documents: state.documentReducer.documents,
+    searchResult: state.documentReducer.searchBox,
+    getUserDocs: state.userReducer.userDocs
+}
 }
 
 const mapDispatchToProps = {
-  getAllDocs,   searchBoxAction
+  getAllDocs, searchBoxAction, getUserDocsAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

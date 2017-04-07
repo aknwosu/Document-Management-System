@@ -87,7 +87,7 @@ const Authentication = {
       || (parseInt(user.id, 10) === parseInt(req.params.id, 10))) {
         next();
       } else {
-        return res.status(403).send({ message: 'You are not allowed in here' });
+        return res.status(401).send({ message: 'You are not allowed in here' });
       }
     });
   }

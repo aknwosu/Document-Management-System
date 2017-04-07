@@ -284,7 +284,7 @@ class UserController {
             .status(404)
             .send({ message: 'Not found' });
         }
-        const allowedFields = ['firstname', 'lastname', 'password'];
+        const allowedFields = ['username', 'firstname', 'lastname', 'password'];
 
         allowedFields.forEach((field) => {
           user[field] = req.body[field]
@@ -356,7 +356,7 @@ class UserController {
         return res.status(404)
       .send({ message: 'No documents belonging to you found' });
       }
-      return res.status(200).json({ message: documents, count: documents.length });
+      return res.status(200).json({ message: 'Your documents', documents });
     }).catch((err) => {
       res.status(400).json({
         message: err.message
@@ -383,9 +383,7 @@ class UserController {
           }
         })
         .then((user) => {
-          res
-            .status(200)
-            .json({ message: user });
+          return res.status(200).json({ message: 'Users found', user });
         });
     } else {
       return res

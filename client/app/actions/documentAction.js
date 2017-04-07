@@ -1,5 +1,4 @@
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
 
 const hostname = window.location.origin;
 const baseUrl = hostname + "/search/"
@@ -18,6 +17,7 @@ export const DELETE_DOCUMENT_SUCCESS = 'DELETE_DOCUMENT_SUCCESS';
 export const DELETE_DOCUMENT_REJECTED = 'DELETE_DOCUMENT_REJECTED';
 export const UPDATE_DOCUMENT_SUCCESS = 'UPDATE_DOCUMENT_SUCCESS';
 export const UPDATE_DOCUMENT_REJECTED = 'UPDATE_DOCUMENT_REJECTED';
+
 
 const docCreatedSuccess = (document) => {
   console.log('succesful Doc Created');
@@ -55,7 +55,6 @@ export function updateDocumentRejected(err) {
 }
 
 export function updateDocumentAction(id, title, content) {
-  debugger
   return (dispatch) => {
     console.log(`${hostname}/documents/${id}`);
     return axios.put(`${hostname}/documents/${id}`, { title, content }, config)
@@ -69,7 +68,6 @@ export function updateDocumentAction(id, title, content) {
     });
   };
 }
-
 
 
 function getDocsSuccess(documents) {
@@ -127,6 +125,7 @@ export function searchBoxAction(searchBox) {
   };
 }
 
+
 export const docDeletedSuccess = (deleteDoc) => {
   return { type: DELETE_DOCUMENT_SUCCESS, deleteDoc };
 }
@@ -151,5 +150,4 @@ export {
   docCreatedSuccess,
   searchBoxRejected,
   searchBoxSuccess };
-
 

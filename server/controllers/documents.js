@@ -47,7 +47,7 @@ class DocumentController {
     if (req.userType === 'admin') {
       query.where = {};
     } else if (req.userType === 'user') {
-      query.include = [{ model: db.Users, attributes: [ 'id'] }];
+      query.include = [{ model: db.Users, attributes: ['id'] }];
       query.where =
         db.sequelize.or(
           { userId: req.decoded.userId },
@@ -192,6 +192,7 @@ class DocumentController {
         }
       }).then((document) => {
         res.status(200).json({
+          message: 'Documents found',
           docs: document
         });
       });

@@ -59,7 +59,6 @@ export default function documentReducer(state = initialState, action) {
       { error: action.payload },
     );
   case SEARCH_DOCUMENT_SUCCESS:
-    console.log("action.payload", action.payload);
     return Object.assign(
       {},
       state,

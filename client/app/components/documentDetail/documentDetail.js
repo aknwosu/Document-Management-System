@@ -1,4 +1,5 @@
 import React from 'react';
+import jwt from 'jsonwebtoken';
 import FroalaEditor from 'react-froala-wysiwyg';
 import 'froala-editor/js/froala_editor.pkgd.min';
 import 'froala-editor/css/froala_style.min.css';
@@ -37,12 +38,8 @@ updateDocument(e) {
 handleModelChange(model) {
   this.setState({model: model});
 }
-// handleModelChange(event) {
-//   this.setState({content: event.target.content})
-// }
 
 onTitleChange(event){
-  console.log("imma change")
   this.setState({title: event.target.value})
 }
 
@@ -53,10 +50,6 @@ componentDidMount(){
     const {id, title, content} = targetDocument;
     this.setState({title, model:content, id})
 }
-didreceiveprops(){
-   
-}
-  // updateDocument(){   this.props.updateDocumentAction(this.props.id) }
 
   render() {
     return (

@@ -54,7 +54,8 @@ class AllRoles extends React.Component {
 
   render() {
     const {roles} = this.props;
-    const mappedRoles = roles.map((role, index) => <a
+    const mappedRoles = roles.map((role, index) => 
+    <a
       className="card-panel"
       key={role.id}
       data-id={role.id}

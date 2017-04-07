@@ -142,7 +142,7 @@ describe('Users', () => {
       .send({ firstname: 'Alibaba' })
       .end((error, response) => {
         expect(response.status).to.equal(200);
-        expect(response.body.message.firstname).to.equal('Alibaba');
+        expect(response.body.User.firstname).to.equal('Alibaba');
         done();
       });
     });
@@ -199,7 +199,7 @@ describe('Users', () => {
 
     it('should handle errors', (done) => {
       request.put('/users/xyz')
-      .set('authorization', regularUserToken3)
+      .set('authorization', adminToken)
       .send({ firstname: 'mimi' })
       .end((error, response) => {
         expect(response.status).to.equal(500);
@@ -262,7 +262,7 @@ describe('Users', () => {
       .set('authorization', adminToken)
       .end((error, response) => {
         expect(response.status).to.equal(200);
-        expect(response.body.message.username).to.equal('Cole');
+        expect(response.body.user[0].username).to.equal('Cole');
         done();
       });
     });
@@ -347,7 +347,7 @@ describe('Users', () => {
       request.delete('/users/5')
       .set('authorization', adminToken)
       .end((err, res) => {
-        expect(res.status).to.equal(204);
+        expect(res.status).to.equal(200);
         done();
       });
     });

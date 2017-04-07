@@ -43,6 +43,7 @@ componentWillReceiveProps(nextProps) {
   }
   render() {
     return (
+      <div id="signup-card" className="card">
       <form onSubmit={this.handleSubmit} onChange={this.handleChange} >
         <div className="form-group" >
           <Input s={6} type="text" className="form-control" value={this.state.username} name="username" label="Username" validate></Input>
@@ -53,6 +54,7 @@ componentWillReceiveProps(nextProps) {
           </div>
         <input className="waves-effect waves-light btn" type="submit" value="Submit" />
       </form>
+      </div>
     );
   }
 };

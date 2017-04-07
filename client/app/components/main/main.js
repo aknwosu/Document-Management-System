@@ -11,13 +11,13 @@ class Main extends React.Component {
     return (
       <div>
         <div>
-          <nav>
+          <nav className="navbar-fixed">
             <div className="nav-wrapper purple darken-4 z-depth-3">
               <Link to="/" className="brand-logo">DocumentIt!</Link>
-              <ul id="nav-mobile" className="right hide-on-med-and-down">
-                {token && <li>
+              <ul id="nav-mobile" className="right">
+                <li>
                   <Link to="/signup">Signup</Link>
-                </li>}
+                </li>
                 {token && <li>
                   <Link to="/login">Login</Link>
                 </li>}

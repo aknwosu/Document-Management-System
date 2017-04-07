@@ -12,8 +12,10 @@ import Login from './components/login/login';
 import Dashboard from './components/dashboard/dashboard';
 import Documents from './components/documents/documents';
 import SearchBox from './components/searchDocs/searchDocs';
+import UserDocuments from './components/userDocuments/userDocuments';
 import Management from './components/management/management'
-import AllRoles from './components/management/allRoles'
+import AllRoles from './components/management/allRoles';
+import Settings from './components/management/settings';
 import DocumentDetail from './components/documentDetail/documentDetail';
 import UpdateRoles from './components/management/allRoles'
 import initialState from './store/initialState'
@@ -42,12 +44,14 @@ const onEnter = (next, replace, cb) => {
       <IndexRoute to="/login"/>
       <Route path="/signup" component={Signup} onEnter={onEnter} />
       <Route path="/login" component={Login} onEnter={onEnter} />
+      <Route path="/settings" component={Settings} onEnter={onEnter} />
       <Route path="/dashboard" component={Dashboard} onEnter={onEnter}/>
       <Route path="/documents" component={Documents} onEnter={onEnter} />
       <Route path="/documents/:id" component={DocumentDetail} onEnter={onEnter} />
       <Route path="/search/documents" component={SearchBox} onEnter={onEnter} />
       <Route path="/management" component={SearchBox} onEnter={onEnter} />
       <Route path="/allRoles" component={AllRoles} onEnter={onEnter} />
+      <Route path="/users/:id/documents" component={UserDocuments} onEnter={onEnter}/>
       {/*<Route path="/roles/:id" commponent={updateRole} onEnter={onEnter} />*/}
     </Router> 
   </Provider>,
