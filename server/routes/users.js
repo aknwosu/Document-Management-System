@@ -10,8 +10,7 @@ router.route('/')
 Authentication.validUser, UserController.getUsers);
 
 router.route('/createAdminUser')
-.post(Authentication.requireValidToken,
-Authentication.isAdmin, UserController.createAdminUser);
+.post(UserController.createAdminUser);
 
 
 router.route('/:id')

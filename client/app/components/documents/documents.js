@@ -88,8 +88,6 @@ class Documents extends React.Component {
                     id="doc-content"
                     model={this.state.content}
                     onModelChange={this.handleModelChange}/> 
-                    {/*<textarea onChange={this.handleChange} type="content" id="textarea1" className="materialize-textarea" value={this.state.content} name="content"></textarea>
-            <label htmlFor="textarea1">Type your text here</label>*/}
                 </div>
               </div>
 

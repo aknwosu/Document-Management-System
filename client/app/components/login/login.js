@@ -1,8 +1,10 @@
 import React from 'react';
+import toastr from 'toastr';
 import {connect} from 'react-redux';
 import {browserHistory} from 'react-router';
 import {loginEvent} from '../../actions/userAction'
 import {Input, Button, Row, Col, Icon} from 'react-materialize';
+
 
 class Login extends React.Component {
 

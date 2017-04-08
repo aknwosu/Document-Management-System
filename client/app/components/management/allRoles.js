@@ -81,11 +81,13 @@ class AllRoles extends React.Component {
         <ul>
           {mappedRoles || <p>No Roles Here</p>}
         </ul>
+
       </div>
     );
   }
 }
 const mapStateToProps = (state, ownProps) => {
+  console.log(state.rolesReducer.allRoles)
   return {roles: state.rolesReducer.allRoles,
     currentRole: state.rolesReducer.currentRole,
     deletedUser: state.rolesReducer

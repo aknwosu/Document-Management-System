@@ -29,7 +29,7 @@ node_modules
 #vscode configuration
 .vscode
 
-client/public/
+client/public
 feedback.md
 selenium-debug.log
 screenshots

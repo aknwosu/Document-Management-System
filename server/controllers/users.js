@@ -46,28 +46,26 @@ class UserController {
    * @returns{object} response object
    */
   static login(req, res) {
-    db
-      .Users
-      .findOne({
-        where: {
-          email: req.body.email
-        }
-      })
-      .then((user) => {
-        if (bcrypt.compareSync(req.body.password, user.password)) {
-          const token = jwt.sign({
-            userId: user.id,
-            roleId: user.roleId,
-            username: user.username
-          }, secret, { expiresIn: '2 days' });
-          return res
-            .status(200)
-            .send({ message: 'Logged in', user: userDetails(user), token, expiresIn: '2 days' });
-        }
+    db.Users.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+    .then((user) => {
+      if (bcrypt.compareSync(req.body.password, user.password)) {
+        const token = jwt.sign({
+          userId: user.id,
+          roleId: user.roleId,
+          username: user.username
+        }, secret, { expiresIn: '2 days' });
         return res
-          .status(400)
-          .send({ message: 'Invalid username or password' });
-      });
+          .status(200)
+          .send({ message: 'Logged in', user: userDetails(user), token, expiresIn: '2 days' });
+      }
+      return res
+        .status(400)
+        .send({ message: 'Invalid username or password' });
+    });
   }
   /**
    * User Logout
@@ -95,27 +93,23 @@ class UserController {
         .status(403)
         .send({ message: 'you can not decide your roleId' });
     }
-    if (!req.body.username || !req.body.firstname || !req.body.lastname || !req.body.password || !req.body.email) {
+    if (!req.body.username || !req.body.firstname
+    || !req.body.lastname || !req.body.password || !req.body.email) {
       return res
         .status(422)
         .send({ message: 'Please complete all fields' });
     }
-    db
-      .Users
-      .findOne({
-        where: {
-          email: req.body.email
-        } || {
-          username: req.body.username
-        }
-      })
-      .then((userExists) => {
-        if (userExists) {
-          return res
-            .status(409)
-            .send({ message: 'User already exists' });
-        }
-      });
+    db.Users.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+    .then((userExists) => {
+      if (userExists) {
+        return res.status(409)
+        .send({ message: 'This email already exists' });
+      }
+    });
     const newUser = {
       username: req.body.username,
       firstname: req.body.firstname,
@@ -123,9 +117,7 @@ class UserController {
       password: req.body.password,
       email: req.body.email
     };
-    db
-      .Users
-      .create(newUser)
+    db.Users.create(newUser)
       .then((user) => {
         const token = jwt.sign({
           userId: user.id,
@@ -151,22 +143,20 @@ class UserController {
    * @returns{object} response object
    */
   static createAdminUser(req, res) {
-    db
-      .Users
-      .findOne({
-        where: {
-          email: req.body.email
-        } || {
-          username: req.body.username
-        }
-      })
-      .then((userExists) => {
-        if (userExists) {
-          return res
-            .status(409)
-            .send({ message: 'User already exists' });
-        }
-      });
+    db.Users.findOne({
+      where: {
+        email: req.body.email
+      } || {
+        username: req.body.username
+      }
+    })
+    .then((userExists) => {
+      if (userExists) {
+        return res
+          .status(409)
+          .send({ message: 'User already exists' });
+      }
+    });
     const newUser = {
       username: req.body.username,
       firstname: req.body.firstname,
@@ -175,28 +165,24 @@ class UserController {
       email: req.body.email,
       roleId: 1
     };
-    db
-      .Users
-      .create(newUser)
-      .then((user) => {
-        const token = jwt.sign({
-          userId: user.id,
-          roleId: user.roleId
-        }, secret, { expiresIn: '2 days' });
+    db.Users.create(newUser).then((user) => {
+      const token = jwt.sign({
+        userId: user.id,
+        roleId: user.roleId
+      }, secret, { expiresIn: '2 days' });
 
-        return res
-          .status(201)
-          .send({
-            message: `${user.username} created`,
-            user: userDetails(user),
-            token,
-            expiresIn: '2 days' });
-      })
-      .catch((err) => {
-        res
-          .status(400)
-          .json({ message: err.message });
-      });
+      return res.status(201)
+      .send({
+        message: `${user.username} created`,
+        user: userDetails(user),
+        token,
+        expiresIn: '2 days' });
+    })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({ message: err.message });
+    });
   }
 
   /**
@@ -373,18 +359,14 @@ class UserController {
    */
   static searchUser(req, res) {
     if (req.query.q) {
-      db
-        .Users
-        .findAll({
-          where: {
-            username: {
-              $iLike: `%${req.query.q}%`
-            }
+      db.Users.findAll({
+        where: {
+          username: {
+            $iLike: `%${req.query.q}%`
           }
-        })
-        .then((user) => {
-          return res.status(200).json({ message: 'Users found', user });
-        });
+        }
+      })
+      .then(user => res.status(200).json({ message: 'Users found', user }));
     } else {
       return res
         .status(404)

@@ -1,7 +1,8 @@
 // import initialState from '../store/initialState';
 import { LOGIN_SUCCESSFUL } from '../actions/userAction';
-import { SIGNUP_SUCCESSFUL } from '../actions/userAction';
 import {
+  SIGNUP_SUCCESSFUL,
+  SIGNUP_REJECTED,
   GET_USER_DOCUMENTS_REJECTED,
   GET_USER_DOCUMENTS_SUCCESS,
   UPDATE_USER_SUCCESS,
@@ -22,6 +23,7 @@ const initialState = {
   documents: [],
   login_success: false,
   signup_success: false,
+  signupRejected: false,
   getUserDocs_Success: false,
   getUserDocs_Rejected: false,
   updateUserSuccess: false,
@@ -45,10 +47,15 @@ export default function userReducer(state = initialState, action) {
       {},
       state,
       { user: action.user, signup_success: true });
+  case SIGNUP_REJECTED:
+    return Object.assign(
+      {},
+      state,
+      { error: action.payload, signupRejected: true });
   case GET_USER_DOCUMENTS_SUCCESS:
     return Object.assign({}, state, { userDocs: action.payload, getUserDocs_Success: true });
   case GET_USER_DOCUMENTS_REJECTED:
-    return Object.assign({}, state, { error: action.payload, getUserDocs_Rejected: true });
+    return Object.assign({}, state, { error: action, getUserDocs_Rejected: true });
   case UPDATE_USER_SUCCESS:
     return Object.assign(
       {},

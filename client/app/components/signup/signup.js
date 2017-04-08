@@ -1,12 +1,14 @@
 import React from 'react';
+import { Input } from 'react-materialize';
+
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { signupEvent } from '../../actions/userAction'
-import { Input, Button, Row, Col, Icon } from 'react-materialize';
+import toastr from 'toastr';
+import { signupEvent } from '../../actions/userAction';
 
 class Signup extends React.Component {
 
-   constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       username: '',
@@ -21,8 +23,11 @@ class Signup extends React.Component {
   }
 
 componentWillReceiveProps(nextProps) {
-  if (nextProps.signup_success){
-    browserHistory.push('/'); //should be docs or dashboard
+if (nextProps.signupState.signupRejected) {
+    toastr.error('This email already exists');
+}
+if (nextProps.signupState.signup_success){
+    browserHistory.push('/dashboard'); //should be docs or dashboard
   }
 }
   handleChange(event) {
@@ -33,13 +38,19 @@ componentWillReceiveProps(nextProps) {
 
   handleSubmit(event) {
     event.preventDefault();
+    if (this.state.username || this.state.firstname
+      || this.state.lastname ||
+      this.state.email ||
+      this.state.password  === '') {
+      toastr.error('Please enter the required fields');
+      }
     this.props.SignupAction(
       this.state.username,
       this.state.firstname,
       this.state.lastname,
       this.state.email,
       this.state.password);
-  }
+  };
   render() {
     return (
       <div id="signup-card" className="card">
@@ -60,7 +71,7 @@ componentWillReceiveProps(nextProps) {
 
 const stateToProps = (state) => {
   return {
-    signup_success: state.userReducer.signup_success
+    signupState: state.userReducer
   }
 }
 

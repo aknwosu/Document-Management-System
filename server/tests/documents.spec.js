@@ -27,15 +27,15 @@ describe('Documents', () => {
     .then(() => db.Documents
     .bulkCreate([testFile.publicDocument1, testFile.privateDocument1]))
     .then(() => {
-      request.post('/users/login')
+      request.post('/api/users/login')
         .send(testFile.adminUser)
         .end((error, response) => {
           docAdminToken = response.body.token;
-          request.post('/users/login')
+          request.post('/api/users/login')
             .send(testFile.regularUser)
             .end((err, res) => {
               regularUserToken = res.body.token;
-              request.post('/users/login')
+              request.post('/api/users/login')
             .send(testFile.regularUser1)
             .end((err, res) => {
               regularUserToken1 = res.body.token;
@@ -48,7 +48,7 @@ describe('Documents', () => {
 
   describe('Create Documents', () => {
     it('should create a document', (done) => {
-      request.post('/documents')
+      request.post('/api/documents')
       .set('authorization', regularUserToken)
       .send(testFile.publicDocument2)
       .end((error, response) => {
@@ -59,7 +59,7 @@ describe('Documents', () => {
     });
 
     it('should set the default access for documents to public', (done) => {
-      request.post('/documents')
+      request.post('/api/documents')
       .set('authorization', regularUserToken)
       .send(testFile.publicDocument3)
       .end((error, response) => {
@@ -69,7 +69,7 @@ describe('Documents', () => {
     });
 
     it('should check that a token is valid', (done) => {
-      request.post('/documents')
+      request.post('/api/documents')
       .set('authorization', ' ')
       .send(testFile.publicDocument3)
       .end((error, response) => {
@@ -79,7 +79,7 @@ describe('Documents', () => {
     });
 
     it('should catch errors', (done) => {
-      request.post('/documents')
+      request.post('/api/documents')
       .set('authorization', regularUserToken)
       .send(testFile.xyz)
       .end((error, response) => {
@@ -91,7 +91,7 @@ describe('Documents', () => {
 
   describe('fetch documents', () => {
     it('should fetch all documents', (done) => {
-      request.get('/documents')
+      request.get('/api/documents')
         .set('authorization', docAdminToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -100,7 +100,7 @@ describe('Documents', () => {
     });
 
     it('should fetch all documents for users', (done) => {
-      request.get('/documents')
+      request.get('/api/documents')
         .set('authorization', regularUserToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -110,7 +110,7 @@ describe('Documents', () => {
   });
   describe('get a single document', () => {
     it('should fetch a single document', (done) => {
-      request.get('/documents/4')
+      request.get('/api/documents/4')
         .set('authorization', docAdminToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -118,7 +118,7 @@ describe('Documents', () => {
         });
     });
     it('should check if documents exist before fetching', (done) => {
-      request.get('/documents/99')
+      request.get('/api/documents/99')
         .set('authorization', docAdminToken)
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -127,7 +127,7 @@ describe('Documents', () => {
     });
 
     it('should not return private documents of users', (done) => {
-      request.get('/documents/2')
+      request.get('/api/documents/2')
         .set('authorization', regularUserToken1)
         .end((err, res) => {
           expect(res.status).to.equal(403);
@@ -137,7 +137,7 @@ describe('Documents', () => {
     });
 
     it('should search for documents based on parameters', (done) => {
-      request.get('/search/documents/?q=GOT')
+      request.get('/api/search/documents/?q=GOT')
       .set('authorization', docAdminToken)
       .end((error, response) => {
         expect(response.status).to.equal(200);
@@ -147,7 +147,7 @@ describe('Documents', () => {
     });
 
     it('should search for documents based on parameters', (done) => {
-      request.get('/search/documents/?q=')
+      request.get('/api/search/documents/?q=')
       .set('authorization', docAdminToken)
       .end((error, response) => {
         expect(response.status).to.equal(404);
@@ -156,7 +156,7 @@ describe('Documents', () => {
     });
 
     it('should catch errors', (done) => {
-      request.get('/documents/xyz')
+      request.get('/api/documents/xyz')
         .set('authorization', regularUserToken)
         .end((err, res) => {
           expect(res.status).to.equal(400);
@@ -167,7 +167,7 @@ describe('Documents', () => {
 
   describe('update documents', () => {
     it('should catch errors', (done) => {
-      request.put('/documents/9')
+      request.put('/api/documents/9')
       .send({ title: 'new title', content: 'new doc content' })
       .set('authorization', docAdminToken)
       .end((err, res) => {
@@ -177,7 +177,7 @@ describe('Documents', () => {
     });
 
     it('should update documents', (done) => {
-      request.put('/documents/2')
+      request.put('/api/documents/2')
       .send({ title: 'new title', content: 'new doc content' })
       .set('authorization', docAdminToken)
       .end((err, res) => {
@@ -189,7 +189,7 @@ describe('Documents', () => {
 
   describe('delete', () => {
     it('should check if a document exists before deleting it', (done) => {
-      request.delete('/documents/99')
+      request.delete('/api/documents/99')
       .set('authorization', docAdminToken)
       .end((err, res) => {
         expect(res.status).to.equal(404);
@@ -198,7 +198,7 @@ describe('Documents', () => {
     });
 
     it('should delete a document', (done) => {
-      request.delete('/documents/1')
+      request.delete('/api/documents/1')
       .set('authorization', docAdminToken)
       .end((err, res) => {
         expect(res.status).to.equal(200);

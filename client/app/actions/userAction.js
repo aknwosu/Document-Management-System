@@ -1,8 +1,9 @@
+/* eslint require-jsdoc: "off"  */
 import axios from 'axios';
-//import jwt from 'jsonwebtoken';
 
 export const LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL';
 export const SIGNUP_SUCCESSFUL = 'SIGNUP_SUCCESSFUL';
+export const SIGNUP_REJECTED = 'SIGNUP_REJECTED';
 export const GET_USER_DOCUMENTS_SUCCESS = 'GET_USER_DOCUMENTS_SUCCESS';
 export const GET_USER_DOCUMENTS_REJECTED = 'GET_USER_DOCUMENTS_REJECTED';
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
@@ -16,13 +17,10 @@ const hostname = window.location.origin;
 
 const loginSuccess = (user) => {
   return { type: LOGIN_SUCCESSFUL, user };
-}
-const signupSuccess = (user) => {
-  return { type: SIGNUP_SUCCESSFUL, user };
-}
+};
 const loginEvent = (email, password) => {
   return (dispatch) => {
-    return axios.post('/users/login', {
+    return axios.post('/api/users/login', {
       email,
       password
     }).then((response) => {
@@ -37,11 +35,16 @@ const loginEvent = (email, password) => {
   };
 };
 
-
+function signupSuccess(signedUser) {
+  return { type: SIGNUP_SUCCESSFUL, payload: signedUser };
+}
+export function signupRejected(err) {
+  return { type: SIGNUP_REJECTED, payload: err };
+}
 
 const signupEvent = (username, firstname, lastname, email, password) => {
   return (dispatch) => {
-    return axios.post('/users', {
+    return axios.post('/api/users', {
       username,
       firstname,
       lastname,
@@ -54,7 +57,7 @@ const signupEvent = (username, firstname, lastname, email, password) => {
         dispatch(signupSuccess(response.data));
       }
     }).catch((err) => {
-      throw new Error(err);
+      dispatch(signupRejected(err.data));
     });
   };
 };
@@ -68,7 +71,7 @@ export function getUsersRejected(err) {
 
 export function getAllUsersAction() {
   return (dispatch) => {
-    return axios.get('/users',
+    return axios.get('/api/users',
       { headers: {
         authorization: localStorage.getItem('token') } })
     .then((response) => {
@@ -92,7 +95,7 @@ export function getUserDocsRejected(err) {
 }
 
 export function getUserDocsAction(userId) {
-  const url = `/users/${userId}/documents`;
+  const url = `/api/users/${userId}/documents`;
   return (dispatch) => {
     return axios.get(url, { headers: {
       authorization: window.localStorage.getItem('token') },
@@ -116,7 +119,7 @@ export function updateUserRejected(err) {
 }
 
 export function updateUserAction(id, username, firstname, lastname, password) {
-  const url = `${hostname}/users/${id}`;
+  const url = `${hostname}/api/users/${id}`;
   return (dispatch) => {
     return axios.put(url,
       { username,
@@ -137,14 +140,14 @@ export function updateUserAction(id, username, firstname, lastname, password) {
 
 export const userDeletedSuccess = (deleteUser) => {
   return { type: DELETE_USER_SUCCESS, deleteUser };
-}
+};
 export const userDeletedRejected = (err) => {
   return { type: DELETE_USER_REJECTED, payload: err };
-}
+};
 
 export function deleteUserAction(id) {
   return (dispatch) => {
-    axios.delete(`/users/${id}`, {
+    axios.delete(`/api/users/${id}`, {
       headers: {
         authorization: window.localStorage.getItem('token'),
       }

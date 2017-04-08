@@ -1,5 +1,7 @@
+/* eslint require-jsdoc: "off" */
+/* eslint no-unused-expressions: "off"*/
+
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
 
 const config = {
   headers: {
@@ -24,7 +26,7 @@ export function getRolesRejected(err) {
 
 export function getAllRolesAction() {
   return (dispatch) => {
-    return axios.get('/roles', config)
+    return axios.get('/api/roles', config)
   .then((response) => {
     if (response.status >= 200 && response.status < 300) {
       dispatch(getRolesSuccess(response.data));
@@ -44,7 +46,7 @@ export function updateRolesRejected(err) {
 
 export function updateRolesAction(id, title) {
   return (dispatch) => {
-    return axios.put(`/roles/${id}`, { title }, config)
+    return axios.put(`/api/roles/${id}`, { title }, config)
     .then((response) => {
       if (response.status === 200) {
         dispatch(updateRolesSuccess(response.data));
@@ -57,14 +59,14 @@ export function updateRolesAction(id, title) {
 
 export const roleDeletedSuccess = (deleteRole) => {
   return { type: DELETE_ROLES_SUCCESS, deleteRole };
-}
+};
 export const roleDeletedRejected = (err) => {
   return { type: DELETE_ROLES_REJECTED, payload: err };
-}
+};
 
 export function deleteRoleAction(id) {
   return (dispatch) => {
-    axios.delete(`/roles/${id}`, {
+    axios.delete(`/api/roles/${id}`, {
       headers: {
         authorization: window.localStorage.getItem('token'),
       }

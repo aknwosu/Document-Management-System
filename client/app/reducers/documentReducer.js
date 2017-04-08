@@ -61,7 +61,7 @@ export default function documentReducer(state = initialState, action) {
     return Object.assign(
       {},
       state,
-      { searchBox: action.payload.docs }
+      { searchBox: action.payload.documents.rows }
     );
   case SEARCH_DOCUMENT_REJECTED:
     return Object.assign(

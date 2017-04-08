@@ -1,25 +1,24 @@
+/* eslint require-jsdoc: "off"  */
 import React from 'react';
 import jwt from 'jsonwebtoken';
-import {connect} from 'react-redux';
-import {browserHistory, Link} from 'react-router';
-
-// import { Navbar, NavItem, Icon } from 'react-materialize';
+import { connect } from 'react-redux';
+import { browserHistory, Link } from 'react-router';
 
 import AllDocuments from '../allDocuments/allDocuments';
 
-import {getAllDocs, searchBoxAction} from '../../actions/documentAction';
-import {getUserDocsAction, updateUserAction} from '../../actions/userAction';
+import { getAllDocs, searchBoxAction } from '../../actions/documentAction';
+import { getUserDocsAction } from '../../actions/userAction';
 import UserDocuments from '../userDocuments/userDocuments';
 
-import {SearchBox} from '../searchDocs/searchDocs';
+import { SearchBox } from '../searchDocs/searchDocs';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-      this.state = {
+    this.state = {
       showUserDocument: false,
       searchTerm: '',
-      search : false,
+      search: false,
       userId: jwt.decode(localStorage.getItem('token')).userId,
       username: jwt.decode(localStorage.getItem('token')).username
 
@@ -28,8 +27,7 @@ class Dashboard extends React.Component {
     this.logOut = this.logOut.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-      this.handleClick.bind = this.handleClick.bind(this);
-
+    this.handleClick.bind = this.handleClick.bind(this);
   }
 
   logOut() {
@@ -86,7 +84,7 @@ handleClick(){
               {token && <li id="sidechip">
                 <Link  className="chip z-depth-3 white-text hoverable purple darken-2" id="sidechip" to="/documents">Create Document</Link>
               </li>}
-              {token && <li id="sidechip">
+              {jwt.decode(token).roleId === 1 && <li id="sidechip">
                 <a  className="chip z-depth-3 hoverable" id="sidechip" href="/allRoles">Roles</a>
               </li>}
               <li id="sidechip">
@@ -119,14 +117,14 @@ handleClick(){
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {documents: state.documentReducer.documents,
+  return { documents: state.documentReducer.documents,
     searchResult: state.documentReducer.searchBox,
     getUserDocs: state.userReducer.userDocs
-}
-}
+  };
+};
 
 const mapDispatchToProps = {
   getAllDocs, searchBoxAction, getUserDocsAction
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
