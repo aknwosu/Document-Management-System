@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import db from '../models';
 import Paginator from '../helpers/pagination';
 
