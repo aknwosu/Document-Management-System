@@ -65,13 +65,13 @@
 	app.use(parser.json());
 	app.use(compression());
 	app.use(express.static('dist'));
+	routes(app);
+	
 	
 	app.get('/*', function (req, res) {
-	  console.log('path', path.join(__dirname, '../dist/index.html'));
 	  res.sendFile(path.join(__dirname, '../dist/index.html'));
 	});
 	
-	routes(app);
 	
 	app.listen(port, function (err) {
 	  if (err) {
