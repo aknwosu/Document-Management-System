@@ -28,7 +28,6 @@ const initialState = {
 export default function documentReducer(state = initialState, action) {
   switch (action.type) {
   case DOCUMENT_CREATE_SUCCESS:
-  console.log(action.document);
     return Object.assign(
       {},
       state,
@@ -62,7 +61,7 @@ export default function documentReducer(state = initialState, action) {
     return Object.assign(
       {},
       state,
-      { searchBox: action.payload.documents.rows }
+      { searchBox: action.payload.docs }
     );
   case SEARCH_DOCUMENT_REJECTED:
     return Object.assign(

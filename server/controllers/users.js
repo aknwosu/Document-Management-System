@@ -181,7 +181,7 @@ class UserController {
     .catch((err) => {
       res
         .status(400)
-        .json({ message: err.message });
+        .send({ message: err.message });
     });
   }
 
@@ -193,24 +193,30 @@ class UserController {
    * @returns{object} response object
    */
   static findUser(req, res) {
+    let attributes;
+    if (req.userType === 'admin') {
+      attributes = userAttributes;
+    } else {
+      attributes = ['id', 'username'];
+    }
     db.Users.findOne({
       where: {
         id: req.params.id
       },
-      attributes: userAttributes
+      attributes
     })
     .then((user) => {
       if (user) {
         return res.status(200)
-          .json({ message: user });
+          .send({ user });
       }
       return res.status(404)
-      .send({ message: 'Not found' });
+        .send({ message: 'Not found' });
     })
     .catch((err) => {
       res
         .status(500)
-        .send({ message: err.message });
+          .send({ message: err.message });
     });
   }
 
@@ -225,16 +231,14 @@ class UserController {
     const query = {};
     query.limit = (req.query.limit > 0)
       ? req.query.limit : 20;
-    query.offset = (req.query.offset > 0)
+    query.offset = (req.query.offset < 0)
       ? req.query.offset : 0;
     if (req.userType === 'admin') {
       query.attributes = userAttributes;
-    } else if (req.userType === 'user') {
+    } else {
       query.attributes = ['id', 'username'];
     }
-    db
-      .Users
-      .findAndCountAll(query)
+    db.Users.findAndCountAll(query)
       .then((users) => {
         const metaData = {
           count: users.count,
@@ -243,9 +247,7 @@ class UserController {
         };
         delete users.count;
         const pageData = Paginator.paginate(metaData);
-        return res
-          .status(200)
-          .json({ users, pageData });
+        return res.status(200).send({ users, pageData });
       });
   }
 
@@ -257,41 +259,36 @@ class UserController {
    * @returns{object} response object
    */
   static updateUser(req, res) {
-    db
-      .Users
-      .findOne({
-        where: {
-          id: req.params.id
-        }
-      })
-      .then((user) => {
-        if (!user) {
-          return res
-            .status(404)
+    db.Users.findOne({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(404)
             .send({ message: 'Not found' });
-        }
-        const allowedFields = ['username', 'firstname', 'lastname', 'password'];
+      }
+      const allowedFields = ['username', 'firstname', 'lastname', 'password'];
 
-        allowedFields.forEach((field) => {
-          user[field] = req.body[field]
-            ? req.body[field]
-            : user[field];
-        });
-
-        user
-          .save()
-          .then(() => {
-            res
-              .status(200)
-              .send({ message: 'User updated',
-                User: userDetails(user) });
-          });
-      })
-      .catch((err) => {
-        res
-          .status(500)
-          .send({ message: err.message });
+      allowedFields.forEach((field) => {
+        user[field] = req.body[field]
+          ? req.body[field]
+          : user[field];
       });
+      user.save().then(() => {
+        res
+          .status(200)
+          .send({ message: 'User updated',
+            User: userDetails(user) });
+      });
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({ message: err.message });
+    });
   }
 
   /**
@@ -301,28 +298,25 @@ class UserController {
    * @returns{object} response object
    */
   static deleteUser(req, res) {
-    db
-      .Users
-      .findOne({
+    db.Users.findOne({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then((user) => {
+      if (!user) {
+        return res.status(404)
+          .send({ message: `User ${req.params.id} not found` });
+      }
+      db.Users.destroy({
         where: {
           id: req.params.id
         }
       })
-      .then((user) => {
-        if (!user) {
-          return res
-            .status(404)
-            .send({ message: `User ${req.params.id} not found` });
-        }
-        db.Users.destroy({
-          where: {
-            id: req.params.id
-          }
-        })
-        .then(() => {
-          res.status(200).json({ message: 'User deleted successfully' });
-        });
+      .then(() => {
+        res.status(200).json({ message: 'User deleted successfully' });
       });
+    });
   }
 
   /**
@@ -340,7 +334,7 @@ class UserController {
     }).then((documents) => {
       if (documents.length < 1) {
         return res.status(404)
-      .send({ message: 'No documents belonging to you found' });
+          .send({ message: 'No documents belonging to you found' });
       }
       return res.status(200).json({ message: 'Your documents', documents });
     }).catch((err) => {
@@ -370,7 +364,7 @@ class UserController {
     } else {
       return res
         .status(404)
-        .json({ error: 'Provide a query' });
+        .send({ error: 'Provide a query' });
     }
   }
 }

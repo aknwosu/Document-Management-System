@@ -87,7 +87,7 @@ function searchBoxRejected(err) {
 }
 
 export function searchBoxAction(searchBox) {
-  const url = `${hostname}/api/documents/?q=${searchBox}`;
+  const url = `/api/search/documents/?q=${searchBox}`;
   return dispatch => axios.get(url, {
     headers: {
       authorization: window.localStorage.getItem('token'),

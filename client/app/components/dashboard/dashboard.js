@@ -54,24 +54,24 @@ handleClick(){
     const token = localStorage.getItem('token');
     return (
       <div>
-      <div className="navbar-fixed">
-        <nav>
-          <div className="nav-wrapper purple darken-4">
-            <Link to="/" className="brand-logo">DocumentIt!</Link>
-            <ul id="nav-mobile" className="right">
-              <li>
-                <a>Hello {this.state.username}</a>
-              </li>
-              <li>
-                <a onClick={this.logOut}>Log out</a>
-              </li>
-              <li>
-                <Link to="/search/documents">Search</Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+        <div className="navbar-fixed">
+          <nav>
+            <div className="nav-wrapper purple darken-4">
+              <Link to="/" className="brand-logo">DocumentIt!</Link>
+              <ul id="nav-mobile" className="right">
+                <li>
+                  <a>Hello {this.state.username}</a>
+                </li>
+                <li>
+                  <a onClick={this.logOut}>Log out</a>
+                </li>
+                <li>
+                  <Link to="/search/documents">Search</Link>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
         <div className="row">
           <div className="col m3" id="side-nav">
             <ul id="slide-out" className="side-nav fixed">

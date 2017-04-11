@@ -16,14 +16,12 @@ const Authentication = {
     const token = req.headers.authorization || req.headers['x-access-token'];
     if (!token) {
       return res.status(403).send({
-        success: false,
         message: 'No token provided.'
       });
     }
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         return res.status(401).send({
-          success: false,
           message: 'Invalid token.'
         });
       }
@@ -45,7 +43,6 @@ const Authentication = {
         next();
       } else {
         return res.status(403).send({
-          success: false,
           message: 'You need to be an admin to use this resource.' });
       }
     });
@@ -87,7 +84,7 @@ const Authentication = {
       || (parseInt(user.id, 10) === parseInt(req.params.id, 10))) {
         next();
       } else {
-        return res.status(401).send({ message: 'You are not allowed in here' });
+        return res.status(403).send({ message: 'You are not allowed in here' });
       }
     });
   }

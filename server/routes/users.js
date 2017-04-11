@@ -15,7 +15,7 @@ router.route('/createAdminUser')
 
 router.route('/:id')
 .get(Authentication.requireValidToken,
-Authentication.isOwnerOrAdmin, UserController.findUser)
+Authentication.validUser, UserController.findUser)
 .put(Authentication.requireValidToken,
 Authentication.validUser,
 Authentication.isOwnerOrAdmin, UserController.updateUser)

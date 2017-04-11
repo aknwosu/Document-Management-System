@@ -55,13 +55,21 @@ describe('Roles', () => {
       });
     });
 
-
     it('should check if a role already exists', (done) => {
       request.post('/api/roles').send(testFile.userRole)
       .set('authorization', rolesAdminUserToken)
       .end((error, response) => {
         expect(response.status).to.equal(400);
         expect(response.body.message).to.equal('Role already exists');
+        done();
+      });
+    });
+
+    it('should not let', (done) => {
+      request.post('/api/roles').send(testFile.xyz)
+      .set('authorization', rolesAdminUserToken)
+      .end((error, response) => {
+        expect(response.status).to.equal(400);
         done();
       });
     });

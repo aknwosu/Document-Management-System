@@ -20,6 +20,21 @@ class DocumentController {
       access: req.body.access,
       userId: req.decoded.userId
     };
+    db.Documents.find({
+      where: { title: req.body.title }
+    })
+    .then((docExists) => {
+      if (docExists) {
+        return res.status(409)
+          .send({ message: 'please enter a different title' });
+      }
+    });
+    if (!newDoc.title) {
+      return res.status(400).send({ messsage: 'please enter a title' });
+    }
+    if (!newDoc.content) {
+      return res.status(400).send({ messsage: 'please enter a text' });
+    }
     db.Documents.create(newDoc)
       .then((document) => {
         res.status(201).json({
