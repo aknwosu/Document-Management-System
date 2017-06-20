@@ -14,10 +14,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgres",
-    "password": "De0luch1",
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "process.env.USER",
+    "password": "process.env.PASS",
+    "database": "process.env.DB_NAME",
+    "host": "process.env.HOST",
+    "use_env_variable": "DATABASE_URL"
   }
 }

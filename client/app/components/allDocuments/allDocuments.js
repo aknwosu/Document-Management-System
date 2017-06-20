@@ -1,6 +1,6 @@
 import React from 'react';
 import jwt from 'jsonwebtoken';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 
 export default class AllDocuments extends React.Component {
   constructor(props) {
@@ -8,19 +8,18 @@ export default class AllDocuments extends React.Component {
   }
 
   render() {
-    const { documents } = this.props;
+    const {documents} = this.props;
     const mappedDocs = documents.map((document) =>
-      <li className="card-panel" key={document.id}>
-        <Link to={`/documents/${document.id}`}>
-          {document.title}
-        </Link>
-      </li>
-    );
+    <li className="card-panel" key={document.id}>
+      <Link to={`/documents/${document.id}`}>
+        {document.title}
+      </Link>
+    </li>);
 
     return (
       <div>
         <ul>
-          {mappedDocs || <p>Hello</p>}
+          {mappedDocs || <p>No Documents Here</p>}
         </ul>
       </div>
     );

@@ -9,10 +9,16 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable]);
+  sequelize = new Sequelize(process.env[config.use_env_variable], {
+    host: config.host,
+    dialect: 'postgres'
+  });
 } else {
   sequelize
-  = new Sequelize(config.database, config.username, config.password, config);
+  = new Sequelize(config.database, config.username, config.password, config, {
+    host: config.host,
+    dialect: 'postgres'
+  });
 }
 
 fs

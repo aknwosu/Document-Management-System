@@ -11,9 +11,9 @@ export default (app) => {
     res.sendFile(path.resolve('client', 'index.html'));
   });
 
-  app.use('/documents', documents);
-  app.use('/users', users);
-  app.use('/search', search);
-  app.use('/search', documents);
-  app.use('/roles', roles);
+  app.use('/api/documents', documents);
+  app.use('/api/users', users);
+  app.use('/api/search', search);
+  app.use('/api/search', documents);
+  app.use('/api/roles', roles);
 };

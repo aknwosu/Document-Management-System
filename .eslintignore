@@ -1,0 +1,5 @@
+server/db/migrations
+server/seeders
+dist
+bin/**
+client

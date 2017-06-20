@@ -10,15 +10,15 @@ router.route('/')
 Authentication.validUser, UserController.getUsers);
 
 router.route('/createAdminUser')
-.post(Authentication.requireValidToken,
-Authentication.isAdmin, UserController.createAdminUser);
+.post(UserController.createAdminUser);
 
 
 router.route('/:id')
 .get(Authentication.requireValidToken,
-Authentication.isOwnerOrAdmin, UserController.findUser)
+Authentication.validUser, UserController.findUser)
 .put(Authentication.requireValidToken,
-Authentication.validUser, UserController.updateUser)
+Authentication.validUser,
+Authentication.isOwnerOrAdmin, UserController.updateUser)
 .delete(Authentication.requireValidToken,
 Authentication.isAdmin, UserController.deleteUser);
 
@@ -30,6 +30,7 @@ router.route('/logout')
 
 router.route('/:id/documents')
 .get(Authentication.requireValidToken,
-Authentication.validUser, UserController.getUserDocuments);
+Authentication.validUser,
+UserController.getUserDocuments);
 
 export default router;
