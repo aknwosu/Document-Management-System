@@ -1,9 +1,9 @@
-# Document-Management-System
+# DocumentIt! Document Management System
 
 [![Build Status](https://travis-ci.org/andela-anwosu/Document-Management-System.svg?branch=development)](https://travis-ci.org/andela-anwosu/Document-Management-System)
 [![Coverage Status](https://coveralls.io/repos/github/andela-anwosu/Document-Management-System/badge.svg?branch=development)](https://coveralls.io/github/andela-anwosu/Document-Management-System?branch=development)
 
-### About DocumentIt! Document Management Systems
+### About [Documentit!](https://documentit.herokuapp.com/)
 This a Javascript implemented document management api with access levels, roles and priviledges.
 Each document defines access rights and which roles can access it. The documents also specify the date it was published.
 Users are categorized by roles.
